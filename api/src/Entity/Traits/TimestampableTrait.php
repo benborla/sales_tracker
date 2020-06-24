@@ -20,6 +20,8 @@ trait TimestampableTrait
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt($dateTimeNow);
         }
+
+        $this->setUpdatedAt($dateTimeNow);
     }
 
     /**
@@ -46,4 +48,29 @@ trait TimestampableTrait
 
         return $this;
     } // End function setCreatedAt
+
+    /**
+     * getUpdatedAt
+     *
+     * @access public
+     * @return ?\DateTimeInterface
+     */
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    } // End function getUpdatedAt
+
+    /**
+     * setUpdatedAt
+     *
+     * @param ?\DateTimeInterface $createdAt
+     * @access public
+     * @return self
+     */
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    } // End function setUpdatedAt
 }

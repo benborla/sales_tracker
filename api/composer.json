@@ -6,6 +6,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.2",
+        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "knplabs/doctrine-behaviors": "^2.0",
         "lexik/jwt-authentication-bundle": "^2.6",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "5.0.*",
@@ -66,7 +68,8 @@
             "echo Run this command: bin/console make:entity --api-resource"
         ],
         "db-update": [
-            "bin/console doctrine:schema:update --force"
+            "bin/console doctrine:schema:update --force",
+            "bin/console doctrine:migrations:migrate"
         ]
     },
     "conflict": {
