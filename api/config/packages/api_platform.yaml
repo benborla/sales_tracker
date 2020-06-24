@@ -1,5 +1,5 @@
 api_platform:
-    title: FPS Progress Log API
+    title: Sales Tracker API
     version: 1.0.0
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
