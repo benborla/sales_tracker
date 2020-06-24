@@ -2,16 +2,56 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\MediaObjectRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Controller\CreateMediaObjectAction;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
+ * Set on INI upload_max_filesize = 1000M and post_max_size=20M
+ *
  * See https://api-platform.com/docs/core/file-upload/
- * @ApiResource()
- * @ORM\Entity(repositoryClass=MediaObjectRepository::class)
+ * @ORM\Entity
+ * @ApiResource(
+ *     iri="http://schema.org/MediaObject",
+ *     normalizationContext={
+ *         "groups"={"media_object_read"}
+ *     },
+ *     collectionOperations={
+ *         "post"={
+ *             "controller"=CreateMediaObjectAction::class,
+ *             "deserialize"=false,
+ *             "security"="is_granted('ROLE_USER')",
+ *             "validation_groups"={"Default", "media_object_create"},
+ *             "openapi_context"={
+ *                 "requestBody"={
+ *                     "content"={
+ *                         "multipart/form-data"={
+ *                             "schema"={
+ *                                 "type"="object",
+ *                                 "properties"={
+ *                                     "file"={
+ *                                         "type"="string",
+ *                                         "format"="binary"
+ *                                     }
+ *                                 }
+ *                             }
+ *                         }
+ *                     }
+ *                 }
+ *             }
+ *         },
+ *         "get"
+ *     },
+ *     itemOperations={
+ *         "get"
+ *     }
+ * )
+ * @Vich\Uploadable
  */
 class MediaObject
 {
@@ -23,19 +63,26 @@ class MediaObject
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string|null
+     *
+     * @ApiProperty(iri="http://schema.org/contentUrl")
+     * @Groups({"media_object_read"})
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $contentUrl;
+    public $contentUrl;
 
     /**
-     * @ORM\Column(type="text")
+     * @var File|null
+     *
+     * @Assert\NotNull(groups={"media_object_create"})
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    private $filePath;
+    public $file;
 
-    public function __construct()
-    {
-        $this->prescriptionMedia = new ArrayCollection();
-    }
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    public $filePath;
 
     public function getId(): ?int
     {
@@ -50,18 +97,6 @@ class MediaObject
     public function setContentUrl(string $contentUrl): self
     {
         $this->contentUrl = $contentUrl;
-
-        return $this;
-    }
-
-    public function getFilePath(): ?string
-    {
-        return $this->filePath;
-    }
-
-    public function setFilePath(string $filePath): self
-    {
-        $this->filePath = $filePath;
 
         return $this;
     }
