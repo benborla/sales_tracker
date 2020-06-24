@@ -33,6 +33,9 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     use TimestampableTrait;
     use BlameableTrait;
 
+    public const TYPE_STAFF = 'staff';
+    public const TYPE_CUSTOMER = 'customer';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -132,6 +135,17 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @Groups({"user:read", "user:write"})
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $accountType = 'customer';
+
+    /**
+     * @ORM\OneToOne(targetEntity=Customer::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $customer;
 
     public function __construct()
     {
@@ -376,6 +390,35 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getAccountType(): ?string
+    {
+        return $this->accountType;
+    }
+
+    public function setAccountType(?string $accountType): self
+    {
+        $this->accountType = $accountType;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        // set the owning side of the relation if necessary
+        if ($customer->getUser() !== $this) {
+            $customer->setUser($this);
+        }
 
         return $this;
     }

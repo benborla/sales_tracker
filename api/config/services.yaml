@@ -5,6 +5,14 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
   doctrine_behaviors_blameable_user_entity: App\Entity\User
+  roles:
+    - ROLE_ADMIN
+    - ROLE_USER
+    - ROLE_CUSTOMER_SUPPORT
+    - ROLE_TEAM_LEADER
+  account_types:
+    - TYPE_STAFF
+    - TYPE_CUSTOMER
 
 services:
     # default configuration for services in *this* file
