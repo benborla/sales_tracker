@@ -1,0 +1,23 @@
+api_platform:
+    title: FPS Progress Log API
+    version: 1.0.0
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    formats:
+        json:    ['application/json']
+        jsonld:  ['application/ld+json']
+        jsonapi: ['application/vnd.api+json']
+        xml:     ['application/xml', 'text/xml']
+        yaml:    ['application/x-yaml']
+        csv:     ['text/csv']
+        html:    ['text/html']
+    patch_formats:
+        json: ['application/json']
+    swagger:
+        versions: [3]
+        api_keys:
+          apiKey:
+            name: Authorization
+            type: header
+    eager_loading:
+        force_eager: true
