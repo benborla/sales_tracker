@@ -19,7 +19,8 @@
         "vich/uploader-bundle": "^1.14"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.19"
+        "symfony/maker-bundle": "^1.19",
+        "symfony/web-server-bundle": "^4.4"
     },
     "config": {
         "preferred-install": {
@@ -60,7 +61,7 @@
             "@auto-scripts"
         ],
         "serve": [
-            "php -S 127.0.0.1:20080 -t public "
+            "php bin/console server:start 127.0.0.1:20080"
         ],
         "serve-stop": [
             "killall -9 php"

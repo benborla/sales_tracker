@@ -14,6 +14,10 @@ api_platform:
     patch_formats:
         jsonld:  ['application/ld+json']
         json: ['application/json']
+    error_formats:
+        jsonproblem: ['application/problem+json']
+        jsonld: ['application/ld+json']      # Hydra error formats
+        jsonapi: ['application/vnd.api+json']
     swagger:
         versions: [3]
         api_keys:
