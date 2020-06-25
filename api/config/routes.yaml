@@ -4,7 +4,7 @@
 
 # login | request token route
 authentication:
-  path: /authentication_token
+  path: /auth
   methods: ['POST']
 
 get_current_user:

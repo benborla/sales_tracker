@@ -29,7 +29,7 @@ security:
         main:
             anonymous: true
             json_login:
-                check_path: /authentication_token
+                check_path: /auth
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -48,5 +48,5 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         #
         - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
-        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
