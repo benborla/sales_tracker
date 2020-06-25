@@ -7,13 +7,26 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use App\Entity\Traits\TimestampableTrait;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     forceEager=false,
+ *     attributes={
+ *        "enable_max_depth"=true,
+ *        "max_depth"=1,
+ *        "fetch_eager"=false
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Customer
 {
+    use TimestampableTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -22,65 +35,78 @@ class Customer
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="customer", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="info")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:write"})
+     * @MaxDepth(1)
      */
     private $user;
 
     /**
      * @ORM\Column(type="string", length=110, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $billingAddress;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $billingCity;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $billingState;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $billingZipCode;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $billingCountry;
 
     /**
      * @ORM\Column(type="string", length=110, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $shippingAddress;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $shippingCity;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $shippingState;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $shippingZipCode;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"user", "user:write"})
      */
     private $shippingCountry;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"user", "user:write"})
      */
-    private $cc = [];
+    private $cc;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -244,12 +270,12 @@ class Customer
         return $this;
     }
 
-    public function getCc(): ?array
+    public function getCc(): ?string
     {
         return $this->cc;
     }
 
-    public function setCc(?array $cc): self
+    public function setCc(?string $cc): self
     {
         $this->cc = $cc;
 

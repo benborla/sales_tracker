@@ -14,14 +14,16 @@ use App\Entity\AbstractEntity;
 use App\Entity\Traits\TimestampableTrait;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(
+ *    forceEager=false,  
  *    collectionOperations={
  *      "get"={"security"="is_granted('ROLE_ADMIN')"},
  *      "post"
  *    },
- *    normalizationContext={"groups"={"user:read"}},
+ *    normalizationContext={"groups"={"user:read", "user"}},
  *    denormalizationContext={"groups"={"user:write"}},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -96,36 +98,6 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
 
     /**
      * @Groups({"user:read", "user:write"})
-     * @ORM\Column(type="string", length=120, nullable=true)
-     */
-    private $address;
-
-    /**
-     * @Groups({"user:read", "user:write"})
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
-    private $city;
-
-    /**
-     * @Groups({"user:read", "user:write"})
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $state;
-
-    /**
-     * @Groups({"user:read", "user:write"})
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
-    private $country;
-
-    /**
-     * @Groups({"user:read", "user:write"})
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $zipcode;
-
-    /**
-     * @Groups({"user:read", "user:write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
@@ -144,8 +116,10 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
 
     /**
      * @ORM\OneToOne(targetEntity=Customer::class, mappedBy="user", cascade={"persist", "remove"})
+     * @Groups({"user:write", "user:read", "user"})
+     * @MaxDepth(1)
      */
-    private $customer;
+    private $info;
 
     public function __construct()
     {
@@ -310,66 +284,6 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getState(): ?string
-    {
-        return $this->state;
-    }
-
-    public function setState(?string $state): self
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(?string $country): self
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    public function getZipcode(): ?string
-    {
-        return $this->zipcode;
-    }
-
-    public function setZipcode(?string $zipcode): self
-    {
-        $this->zipcode = $zipcode;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -396,7 +310,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
 
     public function getAccountType(): ?string
     {
-        return $this->accountType;
+        return $this->accountType === null ? self::TYPE_STAFF : self::TYPE_CUSTOMER;
     }
 
     public function setAccountType(?string $accountType): self
@@ -406,14 +320,14 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
-    public function getCustomer(): ?Customer
+    public function getInfo(): ?Customer
     {
-        return $this->customer;
+        return $this->info;
     }
 
-    public function setCustomer(Customer $customer): self
+    public function setInfo(Customer $customer): self
     {
-        $this->customer = $customer;
+        $this->info = $customer;
 
         // set the owning side of the relation if necessary
         if ($customer->getUser() !== $this) {
