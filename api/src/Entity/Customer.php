@@ -150,6 +150,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getBillingAddress(): ?string
     {
         return $this->billingAddress;
@@ -162,6 +165,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getBillingCity(): ?string
     {
         return $this->billingCity;
@@ -174,6 +180,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getBillingState(): ?string
     {
         return $this->billingState;
@@ -186,6 +195,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getBillingZipCode(): ?string
     {
         return $this->billingZipCode;
@@ -198,6 +210,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getBillingCountry(): ?string
     {
         return $this->billingCountry;
@@ -210,6 +225,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getShippingAddress(): ?string
     {
         return $this->shippingAddress;
@@ -222,6 +240,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getShippingCity(): ?string
     {
         return $this->shippingCity;
@@ -234,6 +255,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getShippingState(): ?string
     {
         return $this->shippingState;
@@ -246,6 +270,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getShippingZipCode(): ?string
     {
         return $this->shippingZipCode;
@@ -258,6 +285,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getShippingCountry(): ?string
     {
         return $this->shippingCountry;
@@ -270,6 +300,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getCc(): ?string
     {
         return $this->cc;

@@ -26,5 +26,5 @@ class SecurityController extends AbstractController
     public function user()
     {
         return new JsonResponse($this->getUser()->toArray());
-    } // End function user
-} // End class SecurityController
+    }
+}

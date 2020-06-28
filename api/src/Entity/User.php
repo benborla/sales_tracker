@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
  * @ApiResource(
  *    forceEager=false,  
  *    collectionOperations={
- *      "get"={"security"="is_granted('ROLE_ADMIN')"},
+ *      "get"={"security"="is_granted('ROLE_ADMIN')", "normalization_context"={"groups"="user:collection:get"}},
  *      "post"
  *    },
  *    normalizationContext={"groups"={"user:read", "user"}},
@@ -94,7 +94,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
      * @Groups({"user:read", "user:write"})
      * @ORM\Column(type="string", length=30, nullable=true)
      */
-    private $middle_name;
+    private $middleName;
 
     /**
      * @Groups({"user:read", "user:write"})
@@ -126,11 +126,17 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         //...
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getEmail(): ?string
     {
         return $this->email;
@@ -187,6 +193,9 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getFirstName(): ?string
     {
         return $this->firstName;
@@ -199,6 +208,9 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getLastName(): ?string
     {
         return $this->lastName;
@@ -248,6 +260,9 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     } // End function toArray
 
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getTelephone(): ?string
     {
         return $this->telephone;
@@ -260,6 +275,9 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getMobile(): ?string
     {
         return $this->mobile;
@@ -272,18 +290,24 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getMiddleName(): ?string
     {
-        return $this->middle_name;
+        return $this->middleName;
     }
 
-    public function setMiddleName(string $middle_name): self
+    public function setMiddleName(string $middleName): self
     {
-        $this->middle_name = $middle_name;
+        $this->middleName = $middleName;
 
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -296,6 +320,9 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
@@ -308,9 +335,13 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getAccountType(): ?string
     {
-        return $this->accountType === null ? self::TYPE_STAFF : self::TYPE_CUSTOMER;
+        $this->accountType = $this->accountType === null ? self::TYPE_STAFF : self::TYPE_CUSTOMER;
+        return ucwords($this->accountType);
     }
 
     public function setAccountType(?string $accountType): self
@@ -320,6 +351,9 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         return $this;
     }
 
+    /**
+     * @Groups("user:collection:get")
+     */
     public function getInfo(): ?Customer
     {
         return $this->info;
@@ -335,5 +369,14 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @Groups("user:collection:get")
+     */
+    public function getName(): string
+    {
+        $middleInitial = strtoupper(substr($this->middleName, 0, 1)) . '.';
+        return "$this->lastName, $this->firstName $middleInitial";
     }
 }

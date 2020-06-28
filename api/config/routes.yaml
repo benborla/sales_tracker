@@ -8,6 +8,6 @@ authentication:
   methods: ['POST']
 
 get_current_user:
-  path: /api/current-user
+  path: /current-user
   controller: App\Controller\SecurityController::user
   methods: ['GET']
