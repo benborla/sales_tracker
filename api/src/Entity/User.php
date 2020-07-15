@@ -15,6 +15,9 @@ use App\Entity\Traits\TimestampableTrait;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(
@@ -23,9 +26,21 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
  *      "get"={"security"="is_granted('ROLE_ADMIN')", "normalization_context"={"groups"="user:collection:get"}},
  *      "post"
  *    },
+ *    itemOperations={
+ *      "get"={"normalization_context"={"groups"="user:item:get"}},
+ *      "post",
+ *      "put",
+ *      "patch",
+ *      "delete"
+ *    },
  *    normalizationContext={"groups"={"user:read", "user"}},
  *    denormalizationContext={"groups"={"user:write"}},
  * )
+ * @ApiFilter(DateFilter::class, properties={"createdAt", "updatedAt"})
+ * @ApiFilter(SearchFilter::class, properties={
+ *    "id": "exact", "email": "partial", "firstName": "partial",
+ *    "middleName": "partial", "lastName": "partial", "accountType": "exact"
+ * })
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"})
  * @ORM\HasLifecycleCallbacks
@@ -115,11 +130,11 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     private $accountType = 'customer';
 
     /**
-     * @ORM\OneToOne(targetEntity=Customer::class, mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Information::class, mappedBy="user", cascade={"persist", "remove"})
      * @Groups({"user:write", "user:read", "user"})
      * @MaxDepth(1)
      */
-    private $info;
+    private $information;
 
     public function __construct()
     {
@@ -127,7 +142,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getId(): ?int
     {
@@ -135,7 +150,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getEmail(): ?string
     {
@@ -161,6 +176,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
 
     /**
      * @see UserInterface
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getRoles(): array
     {
@@ -194,7 +210,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getFirstName(): ?string
     {
@@ -209,7 +225,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getLastName(): ?string
     {
@@ -221,11 +237,6 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         $this->lastName = $lastName;
 
         return $this;
-    }
-
-    public function getFullName(): string
-    {
-        return "$this->firstName $this->lastName";
     }
 
     /**
@@ -261,7 +272,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
 
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getTelephone(): ?string
     {
@@ -276,7 +287,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getMobile(): ?string
     {
@@ -291,7 +302,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getMiddleName(): ?string
     {
@@ -306,7 +317,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -321,7 +332,7 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
@@ -336,47 +347,46 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getAccountType(): ?string
     {
-        $this->accountType = $this->accountType === null ? self::TYPE_STAFF : self::TYPE_CUSTOMER;
-        return ucwords($this->accountType);
+        return \ucfirst($this->accountType);
     }
 
     public function setAccountType(?string $accountType): self
     {
-        $this->accountType = $accountType;
+        $this->accountType = \strtolower($accountType);
 
         return $this;
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
-    public function getInfo(): ?Customer
+    public function getFullName(): string
     {
-        return $this->info;
+        $middleInitial = $this->middleName ? ' ' . strtoupper(substr($this->middleName, 0, 1)) . '.' : '';
+        return "$this->lastName, $this->firstName" . $middleInitial;
     }
 
-    public function setInfo(Customer $customer): self
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
+    public function getInformation(): ?Information
     {
-        $this->info = $customer;
+        return $this->information;
+    }
+
+    public function setInformation(Information $information): self
+    {
+        $this->information = $information;
 
         // set the owning side of the relation if necessary
-        if ($customer->getUser() !== $this) {
-            $customer->setUser($this);
+        if ($information->getUser() !== $this) {
+            $information->setUser($this);
         }
 
         return $this;
-    }
-
-    /**
-     * @Groups("user:collection:get")
-     */
-    public function getName(): string
-    {
-        $middleInitial = strtoupper(substr($this->middleName, 0, 1)) . '.';
-        return "$this->lastName, $this->firstName $middleInitial";
     }
 }

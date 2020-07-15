@@ -2,8 +2,3 @@ api_platform:
     resource: .
     type: api_platform
     prefix: /
-
-# api_platform_docs:
-    # resource: .
-    # type: api_platform
-    # prefix: /docs

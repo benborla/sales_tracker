@@ -23,9 +23,18 @@ final class Version20200624122355 extends AbstractMigration
 
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql("
-        INSERT INTO `user` (`id`, `email`, `roles`, `password`, `first_name`, `last_name`, `telephone`, `mobile`, `middle_name`, `address`, `city`, `state`, `country`, `zipcode`, `created_at`, `created_by_id`, `updated_by_id`, `updated_at`)
+        INSERT INTO `user` (`id`, `email`, `roles`, `password`, `first_name`, `last_name`, `telephone`, `mobile`, `middle_name`, `created_at`)
         VALUES
-          (1, 'benborla@icloud.com', '[\"ROLE_USER\", \"ROLE_ADMIN\"]', '\$argon2i\$v=19\$m=65536,t=4,p=1\$QTVLRS96M29PQ0wvcXY4Lw\$rX9gpusWrEM+8WJE64aJyHGSQzNiLewOMsiuaGEPnOI', 'Ben', 'Borla', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NULL, NULL, NOW());
+          (1,
+          'benborla@icloud.com',
+          '[\"ROLE_USER\", \"ROLE_ADMIN\"]',
+          '\$argon2i\$v=19\$m=65536,t=4,p=1\$QTVLRS96M29PQ0wvcXY4Lw\$rX9gpusWrEM+8WJE64aJyHGSQzNiLewOMsiuaGEPnOI',
+          'Ben',
+          'Borla',
+          NULL,
+          NULL,
+          NULL,
+          NOW());
         ");
 
     }

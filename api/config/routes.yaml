@@ -11,3 +11,8 @@ get_current_user:
   path: /current-user
   controller: App\Controller\SecurityController::user
   methods: ['GET']
+
+get_roles:
+  path: /get-roles
+  controller: App\Controller\GetRolesController
+  methods: ['GET']

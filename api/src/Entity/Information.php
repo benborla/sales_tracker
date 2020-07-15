@@ -3,27 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CustomerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\InformationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\TimestampableTrait;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
-use App\Entity\Traits\TimestampableTrait;
 
 /**
- * @ApiResource(
- *     forceEager=false,
- *     attributes={
- *        "enable_max_depth"=true,
- *        "max_depth"=1,
- *        "fetch_eager"=false
- *     }
- * )
- * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @ApiResource()
+ * @ORM\Entity(repositoryClass=InformationRepository::class)
  * @ORM\HasLifecycleCallbacks
  */
-class Customer
+class Information
 {
     use TimestampableTrait;
 
@@ -35,7 +26,7 @@ class Customer
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="info")
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="information")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"user:write"})
      * @MaxDepth(1)
@@ -123,16 +114,6 @@ class Customer
      */
     private $deletedAt;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PrescriptionMedia::class, mappedBy="customer")
-     */
-    private $prescriptionMedias;
-
-    public function __construct()
-    {
-        $this->prescriptionMedias = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -151,7 +132,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getBillingAddress(): ?string
     {
@@ -166,7 +147,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getBillingCity(): ?string
     {
@@ -181,7 +162,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getBillingState(): ?string
     {
@@ -196,7 +177,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getBillingZipCode(): ?string
     {
@@ -211,7 +192,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getBillingCountry(): ?string
     {
@@ -226,7 +207,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getShippingAddress(): ?string
     {
@@ -241,7 +222,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getShippingCity(): ?string
     {
@@ -256,7 +237,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getShippingState(): ?string
     {
@@ -271,7 +252,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getShippingZipCode(): ?string
     {
@@ -286,7 +267,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getShippingCountry(): ?string
     {
@@ -301,7 +282,7 @@ class Customer
     }
 
     /**
-     * @Groups("user:collection:get")
+     * @Groups({"user:collection:get", "user:item:get"})
      */
     public function getCc(): ?string
     {
@@ -315,6 +296,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -327,6 +311,9 @@ class Customer
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
@@ -347,37 +334,6 @@ class Customer
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|PrescriptionMedia[]
-     */
-    public function getPrescriptionMedias(): Collection
-    {
-        return $this->prescriptionMedias;
-    }
-
-    public function addPrescriptionMedia(PrescriptionMedia $prescriptionMedia): self
-    {
-        if (!$this->prescriptionMedias->contains($prescriptionMedia)) {
-            $this->prescriptionMedias[] = $prescriptionMedia;
-            $prescriptionMedia->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrescriptionMedia(PrescriptionMedia $prescriptionMedia): self
-    {
-        if ($this->prescriptionMedias->contains($prescriptionMedia)) {
-            $this->prescriptionMedias->removeElement($prescriptionMedia);
-            // set the owning side to null (unless already changed)
-            if ($prescriptionMedia->getCustomer() === $this) {
-                $prescriptionMedia->setCustomer(null);
-            }
-        }
 
         return $this;
     }

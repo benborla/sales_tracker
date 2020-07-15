@@ -10,10 +10,10 @@ security:
                 class: App\Entity\User
                 property: email
         # used to reload user from session & other features (e.g. switch_user)
-        # app_user_provider:
-            # entity:
-                # class: App\Entity\User
-                # property: email
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -49,4 +49,3 @@ security:
         # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
