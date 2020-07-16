@@ -20,7 +20,7 @@ final class GetRolesController
      */
     public function __invoke(Request $request, CalculateRoles $calculateRoles)
     {
-        return new JsonResponse($calculateRoles->getRoles());
+        return new JsonResponse(['roles' => $calculateRoles->getRoles()]);
     }
     
 }
