@@ -43,7 +43,7 @@ class CalculateRoles
         unset($calculatedRoles['ROLE_USER']);
 
         return $calculatedRoles;
-    } // End function getRoles
+    }
 
     private function getHighestRole()
     {
