@@ -33,18 +33,17 @@ class CalculateRoles
     }
 
     /**
-     * @return void
+     * @return array
      */
     public function getRoles()
     {
         $calculatedRoles = $this->calculate();
-
-        // by default we should remove ROLE_USER, since this will be an internal use only
-        unset($calculatedRoles['ROLE_USER']);
-
         return $calculatedRoles;
     }
 
+    /**
+     * @return array
+     */
     private function getHighestRole()
     {
         $currentHighestOrder = 0;
@@ -63,7 +62,7 @@ class CalculateRoles
     }
 
     /**
-     * @param mixed $role
+     * @return array
      */
     private function calculate()
     {
@@ -72,7 +71,10 @@ class CalculateRoles
 
         foreach ($this->roles as $roleKey => $roleDetails) {
             if ($highestRole <= $roleDetails['order']) {
-                $calculatedRoles[$roleKey] = $roleDetails['role'];
+                $calculatedRoles[] = [
+                    'id' => $roleKey,
+                    'name' => $roleDetails['role']
+                ];
             }
         }
 

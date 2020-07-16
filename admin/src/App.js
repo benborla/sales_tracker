@@ -11,8 +11,9 @@ import authProvider from './authProvider'
 import UserResource from './pages/user'
 import { Dashboard } from './pages/dashboard'
 import SalesTrackerLayout from './components/ui/Layout'
+import store from './store'
 
-const entrypoint = 'http://localhost:20080' //process.env.REACT_APP_API_ENTRYPOINT
+const entrypoint = process.env.REACT_APP_ENTRYPOINT_API
 const fetchHeaders = { Authorization: `Bearer ${window.localStorage.getItem('token')}` }
 const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
   ...options,
@@ -50,6 +51,7 @@ export default () => (
     dataProvider={dataProvider}
     authProvider={authProvider}
     entrypoint={entrypoint}
+    customReducers={store}
   >
     <UserResource name='users' />
     <ResourceGuesser name='information' />

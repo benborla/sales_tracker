@@ -19,6 +19,7 @@ import {
   FormTab,
   SelectArrayInput
 } from "react-admin"
+import UserRoles from './tabs/userRoles'
 
 // sample
 // https://codesandbox.io/s/react-with-hooks-g0u3m
@@ -50,13 +51,8 @@ export function UserEdit (props) {
         <TextInput source='firstName' />
       </FormTab>
 
-      <FormTab label='Security'>
-        <TextInput source='firstName' />
-      </FormTab>
-
-      { /* @TODO apply role checking on roles */ }
       <FormTab label='Roles'>
-        <SelectArrayInput label='Roles' source='roles' />
+        <UserRoles />
       </FormTab>
     </TabbedForm>
   </Edit>
