@@ -6,6 +6,7 @@ namespace App\EventListener;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticationSuccessListener
 {
@@ -21,7 +22,10 @@ class AuthenticationSuccessListener
           return;
       }
 
+
+
       $event->roles = $user->getRoles();
+      $data['code'] = $event->getResponse()->getStatusCode();
       $data['data'] = array(
           'roles' => $user->getRoles(),
       );
