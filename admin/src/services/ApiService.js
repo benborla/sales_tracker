@@ -1,10 +1,11 @@
 import { fetch } from 'whatwg-fetch'
+import Cookies from 'js-cookie'
 
 const api = process.env.REACT_APP_ENTRYPOINT_API
-const token = ''
+const token = Cookies.get('atk')
 const endpoint = path => api + path
 const options = (method = 'GET', path = '') => {
-  const auth = token !== '' ? `Bearer ${token}` : ''
+  const auth = token !== '' && typeof token !== 'undefined' ? `Bearer ${token}` : ''
   return {
     method,
     headers: {

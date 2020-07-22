@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import './scss/style.scss'
-import routes from './constants/routes'
+import Routes from './constants/routes'
 
 const loading = (
   <div className='pt-3 text-center'>
@@ -13,13 +13,7 @@ class App extends Component {
     return (
       <HashRouter>
         <React.Suspense fallback={loading}>
-          <Switch>
-            {
-              routes.map((route, i) => {
-                return <Route exact={route.exact} key={i} {...route} />
-              })
-            }
-          </Switch>
+          <Routes />
         </React.Suspense>
       </HashRouter>
     )

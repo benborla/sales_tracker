@@ -1,20 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import ApiService from '../../services/ApiService'
-
-export const AUTH_REQUEST = 'AUTH_REQUEST'
-export const AUTH_SUCCESS = 'AUTH_SUCCESS'
-export const AUTH_FAIL = 'AUTH_FAIL'
-
-const error = {
-  code: 500,
-  message: 'Something went wrong.'
-}
+import AuthService from '../../services/AuthService'
+import Cookies from 'js-cookie'
 
 export const authorize = createAsyncThunk(
-  'api/authorize',
-  async ({ email, password }) => {
-    const response = await ApiService.post('/auth', { email, password })
-    return response
+  'api/authenticate',
+  ({ email, password }) => AuthService.authenticate(email, password)
+)
+
+export const logout = createAsyncThunk(
+  'api/logout',
+  () => {
+    Cookies.remove('atk')
   }
 )
 
@@ -37,6 +33,7 @@ export const authSlice = createSlice({
         state.token = action.payload.token
         state.data = action.payload.data
         state.error = null
+        Cookies.set('atk', state.token)
       } else {
         state.token = null
         state.data = null
