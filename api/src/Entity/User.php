@@ -28,7 +28,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *    },
  *    itemOperations={
  *      "get"={"normalization_context"={"groups"="user:item:get"}},
- *      "post",
  *      "put",
  *      "patch",
  *      "delete"
