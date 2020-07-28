@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ChannelRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\NewChannelAction;
+use App\Controller\NewProfileAction;
 use App\Entity\Traits\TimestampableTrait;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
@@ -17,7 +20,17 @@ use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
  *            "controller"=NewChannelAction::class
  *        },
  *        "get"
- *
+ *    },
+ *    itemOperations={
+ *      "get",
+ *      "put",
+ *      "patch",
+ *      "delete",
+ *      "post_new_profile"={
+ *          "controller"=NewProfileAction::class,
+ *          "method"="POST",
+ *          "path"="/channel/{id}/profile"
+ *      }
  *    }
  * )
  * @ORM\Entity(repositoryClass=ChannelRepository::class)
@@ -59,6 +72,16 @@ class Channel implements BlameableInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ChannelProfile::class, mappedBy="channel")
+     */
+    private $channelProfiles;
+
+    public function __construct()
+    {
+        $this->channelProfiles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +144,37 @@ class Channel implements BlameableInterface
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ChannelProfile[]
+     */
+    public function getChannelProfiles(): Collection
+    {
+        return $this->channelProfiles;
+    }
+
+    public function addChannelProfile(ChannelProfile $channelProfile): self
+    {
+        if (!$this->channelProfiles->contains($channelProfile)) {
+            $this->channelProfiles[] = $channelProfile;
+            $channelProfile->setChannel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChannelProfile(ChannelProfile $channelProfile): self
+    {
+        if ($this->channelProfiles->contains($channelProfile)) {
+            $this->channelProfiles->removeElement($channelProfile);
+            // set the owning side to null (unless already changed)
+            if ($channelProfile->getChannel() === $this) {
+                $channelProfile->setChannel(null);
+            }
+        }
 
         return $this;
     }

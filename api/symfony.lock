@@ -197,6 +197,9 @@
     "ramsey/uuid": {
         "version": "4.0.1"
     },
+    "symfony-bundles/json-request-bundle": {
+        "version": "v3.1.1"
+    },
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {

@@ -81,7 +81,7 @@ class GenerateChannelService
      * [x] Save the Channel entity
      * [x] Generate a default Channel Profile which will be named *Channel_NAME_{$defaultProfileName}*
      * [x] Store the generated roles should be linked to Channel Profile
-     * [ ] Create a function that creates a profile, args will be: Channel ID and the profile name
+     * [x] Create a function that creates a profile, args will be: Channel ID and the profile name
      * [ ] create a group in Channel entity and put this on each Profile and Role entity, so it will be included in the respnse
      */
 
@@ -123,16 +123,32 @@ class GenerateChannelService
     /**
      * @param Channel $channel
      * @return \App\Entity\ChannelProfile
+     * @description Content-type should be application/json
      */
-    public function newChannelProfile(Channel $channel): ChannelProfile
+    public function newChannelProfile(Channel $channel, ?Request $request = null): ChannelProfile
     {
+        $profileName = $this->defaultProfileName;
+        $createDefaultRoles = false;
+
+        if ($request instanceof Request) {
+            $profileName = $request->get('profile');
+            $createDefaultRoles = (bool) $request->get('hasDefaultRoles');
+        }
+
         $channelProfile = new ChannelProfile();
 
         $channelProfile->setChannel($channel);
-        $channelProfile->setName(strtoupper($channel->getName() . '_' . $this->defaultProfileName));
+        $channelProfile->setName($channel->getName() . ' ' . $profileName);
 
         $this->em->persist($channelProfile);
         $this->em->flush();
+
+        if ($createDefaultRoles) {
+            $this->newChannelRoles(
+                $channelProfile,
+                $this->applyAccessRoles($channel->getName() . ' ' . $profileName)
+            );
+        }
 
         return $channelProfile;
     }
@@ -164,6 +180,7 @@ class GenerateChannelService
      */
     private function generateKeyEntities($key): array
     {
+        $key = str_replace(' ', '_', $key);
         $classes = get_declared_classes();
         $filtered = array_filter($classes, function ($class) {
             if (strpos($class, $this->entitiesPath) === 0

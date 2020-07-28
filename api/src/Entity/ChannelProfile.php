@@ -27,18 +27,19 @@ class ChannelProfile
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity=Channel::class, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=ChannelRole::class, mappedBy="channelProfile")
+     */
+    private $roles;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Channel::class)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $channel;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ChannelRole::class, mappedBy="channelProfile")
-     */
-    private $role;
-
     public function __construct()
     {
-        $this->role = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,30 +59,18 @@ class ChannelProfile
         return $this;
     }
 
-    public function getChannel(): ?Channel
-    {
-        return $this->channel;
-    }
-
-    public function setChannel(?Channel $channel): self
-    {
-        $this->channel = $channel;
-
-        return $this;
-    }
-
     /**
      * @return Collection|ChannelRole[]
      */
-    public function getRole(): Collection
+    public function getRoles(): Collection
     {
-        return $this->role;
+        return $this->roles;
     }
 
     public function addRole(ChannelRole $role): self
     {
-        if (!$this->role->contains($role)) {
-            $this->role[] = $role;
+        if (!$this->roles->contains($role)) {
+            $this->roles[] = $role;
             $role->setChannelProfile($this);
         }
 
@@ -90,13 +79,25 @@ class ChannelProfile
 
     public function removeRole(ChannelRole $role): self
     {
-        if ($this->role->contains($role)) {
-            $this->role->removeElement($role);
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
             // set the owning side to null (unless already changed)
             if ($role->getChannelProfile() === $this) {
                 $role->setChannelProfile(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getChannel(): ?Channel
+    {
+        return $this->channel;
+    }
+
+    public function setChannel(?Channel $channel): self
+    {
+        $this->channel = $channel;
 
         return $this;
     }
