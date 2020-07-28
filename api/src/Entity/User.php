@@ -135,6 +135,16 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
      */
     private $information;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Channel::class, inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $channel;
+
+    /**
+     * @ORM\OneToOne(targetEntity=ChannelProfile::class, inversedBy="users", cascade={"persist", "remove"})
+     */
+    private $profile;
+
     public function __construct()
     {
         //...
@@ -385,6 +395,30 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
         if ($information->getUser() !== $this) {
             $information->setUser($this);
         }
+
+        return $this;
+    }
+
+    public function getChannel(): ?Channel
+    {
+        return $this->channel;
+    }
+
+    public function setChannel(?Channel $channel): self
+    {
+        $this->channel = $channel;
+
+        return $this;
+    }
+
+    public function getProfile(): ?ChannelProfile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?ChannelProfile $profile): self
+    {
+        $this->profile = $profile;
 
         return $this;
     }

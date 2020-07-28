@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
 import {
   CAlert,
   CProgress,
@@ -21,13 +20,12 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { authorize } from '../../../store/auth/authSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 import Spinner from '../../../components/Spinner'
-import { useHistory, useLocation } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 const Login = (props) => {
   const dispatch = useDispatch()
   const state = useSelector(state => state.auth, shallowEqual)
   const history = useHistory()
-  const location = useLocation()
   const [message, setMessage] = useState('')
   const [visible, setVisible] = useState(10)
   const [alertType, setAlertType] = useState('danger')
@@ -57,10 +55,7 @@ const Login = (props) => {
 
     const response = unwrapResult(await dispatch(authorize({ email, password })))
     if (response.code === 200) {
-      // redirect here
       history.push('/')
-      // history.push('#/dashboard')
-      // history.replace(window.location.hash ? window.location.hash : window.location.pathname);
     } else {
       if (!state.loading) {
         enableForm(e)
