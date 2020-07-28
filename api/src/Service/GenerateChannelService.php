@@ -79,8 +79,10 @@ class GenerateChannelService
      * [x] Convert entity prefix into snake_case
      * [x] Once compiled, store them to $generatedRoles, this will be used later on
      * [x] Save the Channel entity
-     * [ ] Generate a default Channel Profile which will be named *Channel_NAME_{$defaultProfileName}*
-     * [ ] Store the generated roles should be linked to Channel Profile
+     * [x] Generate a default Channel Profile which will be named *Channel_NAME_{$defaultProfileName}*
+     * [x] Store the generated roles should be linked to Channel Profile
+     * [ ] Create a function that creates a profile, args will be: Channel ID and the profile name
+     * [ ] create a group in Channel entity and put this on each Profile and Role entity, so it will be included in the respnse
      */
 
     public function __construct(TokenStorageInterface $token, EntityManagerInterface $em)
@@ -89,15 +91,16 @@ class GenerateChannelService
         $this->em = $em;
     }
 
-    public function newChannel(Request $request)
+    /**
+     * @param Request $request
+     * @return null|\App\Entity\Channel
+     */
+    public function newChannel(Request $request): ?Channel
     {
-        $data = $request->attributes->get('data');
-        if (!$data instanceof Channel) {
-            return;
+        $channel = $request->attributes->get('data');
+        if (!$channel instanceof Channel) {
+            return null;
         }
-
-        $channel = $data;
-        $this->generatedRoles = $this->applyAccessRoles($channel->getName());
 
         $channel->setIsActive(true);
         $channel->setIsArchived(false);
@@ -109,10 +112,19 @@ class GenerateChannelService
             throw new RuntimeException('Unable to create channel');
         }
 
-        $this->newChannelRoles($this->newChannelProfile($channel), $this->generatedRoles);
+        $this->newChannelRoles(
+          $this->newChannelProfile($channel),
+          $this->applyAccessRoles($channel->getName())
+        );
+
+        return $channel;
     }
 
-    public function newChannelProfile(Channel $channel)
+    /**
+     * @param Channel $channel
+     * @return \App\Entity\ChannelProfile
+     */
+    public function newChannelProfile(Channel $channel): ChannelProfile
     {
         $channelProfile = new ChannelProfile();
 
@@ -145,7 +157,7 @@ class GenerateChannelService
         }
 
         return $this;
-    } // End function newChannelRoles
+    }
 
     /**
      * @return array
