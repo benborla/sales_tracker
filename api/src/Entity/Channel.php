@@ -12,6 +12,7 @@ use App\Controller\NewProfileAction;
 use App\Entity\Traits\TimestampableTrait;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
@@ -31,7 +32,9 @@ use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
  *          "method"="POST",
  *          "path"="/channel/{id}/profile"
  *      }
- *    }
+ *    },
+ *    normalizationContext={"groups"={"channel:read", "channel"}},
+ *    denormalizationContext={"groups"={"user:write"}},
  * )
  * @ORM\Entity(repositoryClass=ChannelRepository::class)
  * @ORM\HasLifecycleCallbacks
@@ -45,36 +48,43 @@ class Channel implements BlameableInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"channel"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Groups({"channel"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"channel"})
      */
     private $isActive;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"channel"})
      */
     private $isArchived;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"channel"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"channel"})
      */
     private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=ChannelProfile::class, mappedBy="channel")
+     * @Groups({"channel"})
      */
     private $channelProfiles;
 

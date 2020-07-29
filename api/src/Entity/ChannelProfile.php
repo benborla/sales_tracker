@@ -7,9 +7,12 @@ use App\Repository\ChannelProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *    normalizationContext={"groups"={"channelProfile:read", "channelProfile"}},
+ * )
  * @ORM\Entity(repositoryClass=ChannelProfileRepository::class)
  */
 class ChannelProfile
@@ -18,15 +21,18 @@ class ChannelProfile
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"channel", "channelProfile"})
      */
     private $id;
 
     /**
+     * @Groups({"channel", "channelProfile"})
      * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
+     * @Groups({"channel", "channelProfile"})
      * @ORM\OneToMany(targetEntity=ChannelRole::class, mappedBy="channelProfile")
      */
     private $roles;

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ChannelRoleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -16,16 +17,19 @@ class ChannelRole
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"channel", "channelProfile"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=155)
+     * @Groups({"channel", "channelProfile"})
      */
     private $roleKey;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"channel", "channelProfile"})
      */
     private $roleName;
 

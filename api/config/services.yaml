@@ -49,3 +49,7 @@ services:
       arguments: 
             - '@security.token_storage'
             - '%roles%'
+
+    App\Service\RoleKeyService:
+      arguments:
+            - '@serializer.name_converter.camel_case_to_snake_case'

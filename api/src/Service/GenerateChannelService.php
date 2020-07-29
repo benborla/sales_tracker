@@ -8,10 +8,10 @@ use App\Entity\Channel;
 use App\Entity\ChannelProfile;
 use App\Entity\ChannelRole;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
+use App\Service\RoleKeyService;
 
 use function get_declared_classes;
 use function array_filter;
@@ -21,14 +21,6 @@ use function date;
 
 class GenerateChannelService
 {
-    /**
-     * @var array
-     * @access private
-     */
-    private $defaultRoles = [
-        '%s_READ',
-        '%s_WRITE',
-    ];
 
     /**
      * @var string
@@ -73,6 +65,12 @@ class GenerateChannelService
     private $em;
 
     /**
+     * @var \App\Service\RoleKeyService
+     * @access private
+     */
+    private $roleKeyService;
+
+    /**
      * @TODO
      * [x] map all entity files on $entitiesPath, this will be used as a prefix to your roles,like
      * User_READ, User_WRITE, ChannelProfile_READ, ChannelProfile_WRITE
@@ -85,10 +83,14 @@ class GenerateChannelService
      * [ ] create a group in Channel entity and put this on each Profile and Role entity, so it will be included in the respnse
      */
 
-    public function __construct(TokenStorageInterface $token, EntityManagerInterface $em)
-    {
+    public function __construct(
+        TokenStorageInterface $token,
+        EntityManagerInterface $em,
+        RoleKeyService $roleKeyService
+    ) {
         $this->user = $token->getToken()->getUser();
         $this->em = $em;
+        $this->roleKeyService = $roleKeyService;
     }
 
     /**
@@ -194,8 +196,7 @@ class GenerateChannelService
 
         $classes = array_map(function ($class) use ($key) {
             $class = explode('\\', $class);
-            $class = (new CamelCaseToSnakeCaseNameConverter)->normalize(end($class));
-            return strtoupper($key) . '_' . strtoupper($class);
+            return $this->roleKeyService->getKey($key, end($class));
         }, $filtered);
 
         return $classes;
@@ -210,11 +211,10 @@ class GenerateChannelService
     {
         $roles = [];
         foreach ($this->generateKeyEntities($key) as $role) {
-            foreach ($this->defaultRoles as $roleFunction) {
-                $roleKey = sprintf($roleFunction, $role);
-                $roleName = ucwords(str_replace('_', ' ', strtolower($roleKey)));
-                $roles[$roleKey] = $roleName;
-            }
+            $roleRead = $this->roleKeyService->getReadKey($role);
+            $roleWrite = $this->roleKeyService->getWriteKey($role);
+            $roles[$roleRead] = $this->roleKeyService->convertToBasicDescription($roleRead);
+            $roles[$roleWrite] = $this->roleKeyService->convertToBasicDescription($roleWrite);
         }
 
         return $roles;
