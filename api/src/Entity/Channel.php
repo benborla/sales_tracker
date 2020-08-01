@@ -48,7 +48,6 @@ class Channel implements BlameableInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"channel"})
      */
     private $id;
 
@@ -98,6 +97,9 @@ class Channel implements BlameableInterface
         return $this->id;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getName(): ?string
     {
         return $this->name;

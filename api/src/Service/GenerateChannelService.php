@@ -104,6 +104,7 @@ class GenerateChannelService
             return null;
         }
 
+        $channel->setName($request->request->get('name'));
         $channel->setIsActive(true);
         $channel->setIsArchived(false);
 
@@ -211,10 +212,10 @@ class GenerateChannelService
     {
         $roles = [];
         foreach ($this->generateKeyEntities($key) as $role) {
-            $roleRead = $this->roleKeyService->getReadKey($role);
-            $roleWrite = $this->roleKeyService->getWriteKey($role);
-            $roles[$roleRead] = $this->roleKeyService->convertToBasicDescription($roleRead);
-            $roles[$roleWrite] = $this->roleKeyService->convertToBasicDescription($roleWrite);
+            foreach ($this->roleKeyService->getTypes() as $type) {
+                $keyType = $role . '_' . $type;
+                $roles[$keyType] = $this->roleKeyService->convertToBasicDescription($keyType);
+            }
         }
 
         return $roles;

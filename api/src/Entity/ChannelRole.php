@@ -43,6 +43,9 @@ class ChannelRole
         return $this->id;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getRoleKey(): ?string
     {
         return $this->roleKey;
@@ -55,6 +58,9 @@ class ChannelRole
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getRoleName(): ?string
     {
         return $this->roleName;

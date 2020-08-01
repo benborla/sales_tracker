@@ -10,8 +10,10 @@ use function str_replace;
 
 class RoleKeyService
 {
+    public const TYPE_CREATE = 'CREATE';
     public const TYPE_READ = 'READ';
-    public const TYPE_WRITE = 'WRITE';
+    public const TYPE_UPDATE = 'UPDATE';
+    public const TYPE_DELETE = 'DELETE';
 
     /**
      * @var \Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
@@ -45,8 +47,16 @@ class RoleKeyService
     }
 
     /**
-     * getReadKey
-     *
+     * @param string $role
+     * @access public
+     * @return string
+     */
+    public function getCreateKey(string $role): string
+    {
+        return $role . '_' . self::TYPE_CREATE;
+    }
+
+    /**
      * @param string $role
      * @access public
      * @return string
@@ -57,15 +67,36 @@ class RoleKeyService
     }
 
     /**
-     * getWriteKey
-     *
      * @param string $role
      * @access public
      * @return string
      */
-    public function getWriteKey(string $role): string
+    public function getUpdateKey(string $role): string
     {
-        return $role . '_' . self::TYPE_WRITE;
+        return $role . '_' . self::TYPE_UPDATE;
+    }
+
+    /**
+     * @param string $role
+     * @access public
+     * @return string
+     */
+    public function getDeleteKey(string $role): string
+    {
+        return $role . '_' . self::TYPE_DELETE;
+    }
+
+    /**
+     * @access public
+     */
+    public function getTypes(): array
+    {
+        return [
+            self::TYPE_CREATE,
+            self::TYPE_READ,
+            self::TYPE_UPDATE,
+            self::TYPE_DELETE,
+        ];
     }
 
     public function convertToBasicDescription(string $generatedRole): string

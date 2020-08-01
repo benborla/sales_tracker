@@ -141,14 +141,21 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     private $channel;
 
     /**
+     * @Groups({"user"})
      * @ORM\OneToOne(targetEntity=ChannelProfile::class, inversedBy="users", cascade={"persist", "remove"})
      */
     private $profile;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserProfile::class, mappedBy="user")
+     */
+    private $userProfiles;
+
     public function __construct()
     {
         //...
-    }
+
+        $this->userProfiles = new ArrayCollection();    }
 
     /**
      * @Groups({"user:collection:get", "user:item:get"})
@@ -419,6 +426,38 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     public function setProfile(?ChannelProfile $profile): self
     {
         $this->profile = $profile;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserProfile[]
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
+    public function getUserProfiles(): Collection
+    {
+        return $this->userProfiles;
+    }
+
+    public function addUserProfile(UserProfile $userProfile): self
+    {
+        if (!$this->userProfiles->contains($userProfile)) {
+            $this->userProfiles[] = $userProfile;
+            $userProfile->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserProfile(UserProfile $userProfile): self
+    {
+        if ($this->userProfiles->contains($userProfile)) {
+            $this->userProfiles->removeElement($userProfile);
+            // set the owning side to null (unless already changed)
+            if ($userProfile->getUser() === $this) {
+                $userProfile->setUser(null);
+            }
+        }
 
         return $this;
     }

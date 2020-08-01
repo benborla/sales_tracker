@@ -21,23 +21,24 @@ class ChannelProfile
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"channel", "channelProfile"})
+     * @Groups({"channel",  "user"})
      */
     private $id;
 
     /**
-     * @Groups({"channel", "channelProfile"})
+     * @Groups({"channel", "user:read"})
      * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
-     * @Groups({"channel", "channelProfile"})
+     * @Groups({"channel", "user:read"})
      * @ORM\OneToMany(targetEntity=ChannelRole::class, mappedBy="channelProfile")
      */
     private $roles;
 
     /**
+     * @Groups({"user:read"})
      * @ORM\ManyToOne(targetEntity=Channel::class)
      * @ORM\JoinColumn(nullable=false)
      */
@@ -53,6 +54,9 @@ class ChannelProfile
         return $this->id;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getName(): ?string
     {
         return $this->name;
@@ -66,6 +70,7 @@ class ChannelProfile
     }
 
     /**
+     * @Groups({"user:collection:get", "user:item:get"})
      * @return Collection|ChannelRole[]
      */
     public function getRoles(): Collection
@@ -96,6 +101,9 @@ class ChannelProfile
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getChannel(): ?Channel
     {
         return $this->channel;
