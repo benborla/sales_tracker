@@ -80,7 +80,7 @@ class GenerateChannelService
      * [x] Generate a default Channel Profile which will be named *Channel_NAME_{$defaultProfileName}*
      * [x] Store the generated roles should be linked to Channel Profile
      * [x] Create a function that creates a profile, args will be: Channel ID and the profile name
-     * [ ] create a group in Channel entity and put this on each Profile and Role entity, so it will be included in the respnse
+     * [x] create a group in Channel entity and put this on each Profile and Role entity, so it will be included in the respnse
      */
 
     public function __construct(
