@@ -44,7 +44,7 @@ class ChannelRole
     }
 
     /**
-     * @Groups({"user:collection:get", "user:item:get"})
+     * @Groups({"channel", "user:collection:get", "user:item:get"})
      */
     public function getRoleKey(): ?string
     {
@@ -59,7 +59,7 @@ class ChannelRole
     }
 
     /**
-     * @Groups({"user:collection:get", "user:item:get"})
+     * @Groups({"channel", "user:collection:get", "user:item:get"})
      */
     public function getRoleName(): ?string
     {

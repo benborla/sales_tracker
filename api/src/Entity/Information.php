@@ -10,7 +10,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={"security"="is_granted('READ')"},
+ *     collectionOperations={
+ *          "get" = { "security" = "is_granted('INFORMATION_READ', object)" },
+ *          "post" = { "security_post_denormalize" = "is_granted('CREATE', object)" }
+ *     },
+ *     itemOperations={
+ *          "get" = { "security" = "is_granted('READ', object)" },
+ *          "put" = { "security" = "is_granted('UPDATE', object)" },
+ *          "patch" = { "security" = "is_granted('UPDATE', object)" },
+ *          "delete" = { "security" = "is_granted('DELETE', object)" }
+ *     },
+ * )
  * @ORM\Entity(repositoryClass=InformationRepository::class)
  * @ORM\HasLifecycleCallbacks
  */

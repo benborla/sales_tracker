@@ -10,6 +10,7 @@ use function str_replace;
 
 class RoleKeyService
 {
+    public const PREFIX_ROLE = 'ROLE';
     public const TYPE_CREATE = 'CREATE';
     public const TYPE_READ = 'READ';
     public const TYPE_UPDATE = 'UPDATE';
@@ -97,6 +98,19 @@ class RoleKeyService
             self::TYPE_UPDATE,
             self::TYPE_DELETE,
         ];
+    }
+
+    /**
+     * generateKey
+     *
+     * @param string $role
+     * @param string $type
+     * @access public
+     * @return string
+     */
+    public function generateKey(string $role, string $type): string
+    {
+        return self::PREFIX_ROLE . "_{$role}_{$type}";
     }
 
     public function convertToBasicDescription(string $generatedRole): string

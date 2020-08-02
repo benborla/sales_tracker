@@ -25,6 +25,11 @@ class Kernel extends BaseKernel
         }
     }
 
+    public function getCacheDir()
+    {
+        return dirname(__DIR__).'/var/'.$this->environment.'/cache';
+    }
+
     public function getProjectDir(): string
     {
         return \dirname(__DIR__);

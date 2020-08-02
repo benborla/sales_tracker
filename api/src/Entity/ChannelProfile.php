@@ -26,13 +26,13 @@ class ChannelProfile
     private $id;
 
     /**
-     * @Groups({"channel", "user:read"})
+     * @Groups({"channel", "channelProfile", "user:read"})
      * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
-     * @Groups({"channel", "user:read"})
+     * @Groups({"channel", "channelProfile", "user:read"})
      * @ORM\OneToMany(targetEntity=ChannelRole::class, mappedBy="channelProfile")
      */
     private $roles;

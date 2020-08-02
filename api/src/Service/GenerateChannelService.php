@@ -213,8 +213,8 @@ class GenerateChannelService
         $roles = [];
         foreach ($this->generateKeyEntities($key) as $role) {
             foreach ($this->roleKeyService->getTypes() as $type) {
-                $keyType = $role . '_' . $type;
-                $roles[$keyType] = $this->roleKeyService->convertToBasicDescription($keyType);
+                $generatedRole = $this->roleKeyService->generateKey($role, $type);
+                $roles[$generatedRole] = $this->roleKeyService->convertToBasicDescription($generatedRole);
             }
         }
 
