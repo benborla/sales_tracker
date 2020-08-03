@@ -70,19 +70,6 @@ class GenerateChannelService
      */
     private $roleKeyService;
 
-    /**
-     * @TODO
-     * [x] map all entity files on $entitiesPath, this will be used as a prefix to your roles,like
-     * User_READ, User_WRITE, ChannelProfile_READ, ChannelProfile_WRITE
-     * [x] Convert entity prefix into snake_case
-     * [x] Once compiled, store them to $generatedRoles, this will be used later on
-     * [x] Save the Channel entity
-     * [x] Generate a default Channel Profile which will be named *Channel_NAME_{$defaultProfileName}*
-     * [x] Store the generated roles should be linked to Channel Profile
-     * [x] Create a function that creates a profile, args will be: Channel ID and the profile name
-     * [x] create a group in Channel entity and put this on each Profile and Role entity, so it will be included in the respnse
-     */
-
     public function __construct(
         TokenStorageInterface $token,
         EntityManagerInterface $em,
@@ -95,6 +82,8 @@ class GenerateChannelService
 
     /**
      * @todo make a function that will automatically assign the admin profile to the super admin
+     * @todo refactor the roles, all roles should be stored inside a table, and we just link a role to a profile, we need
+     * a pivot table to do this so we can pick a specific role that a profile can have
      * @param Request $request
      * @return null|\App\Entity\Channel
      */
