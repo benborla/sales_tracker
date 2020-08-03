@@ -19,7 +19,7 @@ abstract class AbstractVoter extends Voter
     protected const ROLE_KEY = 'ROLE';
     private const CACHE_KEY = 'user.stored.roles';
     private const CACHE_EXPIRY = 86400; // 24 hours
-    private const CACHE_NAMESPACE = 'sales_tracker';
+    private const CACHE_NAMESPACE = 'app';
 
     /** KernelInterface $appKernel */
     private $appKernel;

@@ -94,6 +94,7 @@ class GenerateChannelService
     }
 
     /**
+     * @todo make a function that will automatically assign the admin profile to the super admin
      * @param Request $request
      * @return null|\App\Entity\Channel
      */

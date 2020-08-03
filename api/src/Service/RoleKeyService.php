@@ -11,6 +11,7 @@ use function str_replace;
 class RoleKeyService
 {
     public const PREFIX_ROLE = 'ROLE';
+    public const TYPE_READ_COLLECTION = 'READCOLLECTION';
     public const TYPE_CREATE = 'CREATE';
     public const TYPE_READ = 'READ';
     public const TYPE_UPDATE = 'UPDATE';
@@ -87,12 +88,18 @@ class RoleKeyService
         return $role . '_' . self::TYPE_DELETE;
     }
 
+    public function getReadCollectionKey(string $role): string
+    {
+        return $role . '_' . self::TYPE_READ_COLLECTION;
+    }
+
     /**
      * @access public
      */
     public function getTypes(): array
     {
         return [
+            self::TYPE_READ_COLLECTION,
             self::TYPE_CREATE,
             self::TYPE_READ,
             self::TYPE_UPDATE,
