@@ -19,7 +19,14 @@ use function array_filter;
 use function array_map;
 use function strtoupper;
 use function date;
+use function explode;
+use function str_replace;
 
+/**
+ * @TODO
+ * [ ] When creating a new channel, it should create a default profile $channel_ADMIN profile
+ * [ ] When a default channel profile admin is created, it should have all the roles available for the user
+ */
 class ChannelService
 {
     /**
@@ -93,11 +100,6 @@ class ChannelService
             throw new RuntimeException('Unable to create channel');
         }
 
-        $this->newChannelRoles(
-          $this->newChannelProfile($channel),
-          $this->applyAccessRoles($channel->getName())
-        );
-
         return $channel;
     }
 
@@ -124,23 +126,21 @@ class ChannelService
         $this->em->persist($channelProfile);
         $this->em->flush();
 
-        if ($createDefaultRoles) {
-            $this->newChannelRoles(
-                $channelProfile,
-                $this->applyAccessRoles($channel->getName() . ' ' . $profileName)
-            );
-        }
-
         return $channelProfile;
     }
 
-    public function updateProfileRoles(Request $request)
+    /**
+     * @param Request $request
+     * @access public
+     * @return null|ChannelProfile
+     */
+    public function updateProfileRoles(Request $request): ?ChannelProfile
     {
         $roles = $request->request;
         $profile = $request->attributes->get('data');
 
         if (!$profile instanceof ChannelProfile) {
-            return;
+            return null;
         }
 
         foreach ($roles as $role) {
@@ -153,70 +153,5 @@ class ChannelService
         }
 
         return $profile;
-    }
-
-    /**
-     * newChannelRoles
-     *
-     * @param ChannelProfile $channelProfile
-     * @param array $roles
-     * @return self
-     */
-    private function newChannelRoles(ChannelProfile $channelProfile, array $roles): self
-    {
-        foreach ($roles as $key => $name) {
-            $channelRole = new ChannelRole();
-            $channelRole->setRoleKey($key);
-            $channelRole->setRoleName($name);
-            $channelRole->setChannelProfile($channelProfile);
-
-            $this->em->persist($channelRole);
-            $this->em->flush();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function generateKeyEntities($key): array
-    {
-        $key = str_replace(' ', '_', $key);
-        $classes = get_declared_classes();
-        $filtered = array_filter($classes, function ($class) {
-            if (strpos($class, $this->entitiesPath) === 0
-                && $class !== $this->abstractEntity
-            ) {
-                return $class;
-            } else {
-              return;
-            }
-        });
-
-        $classes = array_map(function ($class) use ($key) {
-            $class = explode('\\', $class);
-            return $this->roleKeyService->getKey($key, end($class));
-        }, $filtered);
-
-        return $classes;
-    }
-
-    /**
-     * @param mixed $key
-     * @access private
-     * @return array
-     */
-    private function applyAccessRoles($key): array
-    {
-        $roles = [];
-        foreach ($this->generateKeyEntities($key) as $role) {
-            foreach ($this->roleKeyService->getTypes() as $type) {
-                $generatedRole = $this->roleKeyService->generateKey($role, $type);
-                $roles[$generatedRole] = $this->roleKeyService->convertToBasicDescription($generatedRole);
-            }
-        }
-
-        return $roles;
     }
 }
