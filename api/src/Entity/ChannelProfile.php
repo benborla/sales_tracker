@@ -8,10 +8,27 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\UpdateProfileRolesAction;
 
 /**
  * @ApiResource(
  *    normalizationContext={"groups"={"channelProfile:read", "channelProfile"}},
+ *    collectionOperations={
+ *        "post",
+ *        "get"
+ *    },
+ *    itemOperations={
+ *        "get",
+ *        "put",
+ *        "patch",
+ *        "delete",
+ *        "update_profile_roles"={
+ *            "method"="POST",
+ *            "controller"=UpdateProfileRolesAction::class,
+ *            "path"="/channel_profiles/{id}/update-roles"
+ *        }
+ *
+ *    }
  * )
  * @ORM\Entity(repositoryClass=ChannelProfileRepository::class)
  */

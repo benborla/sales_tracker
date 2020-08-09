@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use App\Service\RoleKeyService;
+use App\Entity\Role;
 
 use function get_declared_classes;
 use function array_filter;
@@ -19,21 +20,8 @@ use function array_map;
 use function strtoupper;
 use function date;
 
-class GenerateChannelService
+class ChannelService
 {
-
-    /**
-     * @var string
-     * @access private
-     */
-    private $entitiesPath = 'App\Entity';
-
-    /**
-     * @var string
-     * @access private
-     */
-    private $abstractEntity = 'App\Entity\AbstractEntity';
-
     /**
      * @var string
      * @access private
@@ -144,6 +132,27 @@ class GenerateChannelService
         }
 
         return $channelProfile;
+    }
+
+    public function updateProfileRoles(Request $request)
+    {
+        $roles = $request->request;
+        $profile = $request->attributes->get('data');
+
+        if (!$profile instanceof ChannelProfile) {
+            return;
+        }
+
+        foreach ($roles as $role) {
+            $emRole = $this->em->find(Role::class, $role);
+            $channelRole = new ChannelRole();
+            $channelRole->setChannelProfile($profile);
+            $channelRole->setRole($emRole);
+            $this->em->persist($channelRole);
+            $this->em->flush();
+        }
+
+        return $profile;
     }
 
     /**
