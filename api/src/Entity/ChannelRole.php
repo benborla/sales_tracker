@@ -22,55 +22,19 @@ class ChannelRole
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=155)
-     * @Groups({"channel", "channelProfile"})
-     */
-    private $roleKey;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups({"channel", "channelProfile"})
-     */
-    private $roleName;
-
-    /**
      * @ORM\ManyToOne(targetEntity=ChannelProfile::class, inversedBy="role")
      */
     private $channelProfile;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Role::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $role;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @Groups({"channel", "user:collection:get", "user:item:get"})
-     */
-    public function getRoleKey(): ?string
-    {
-        return $this->roleKey;
-    }
-
-    public function setRoleKey(string $roleKey): self
-    {
-        $this->roleKey = $roleKey;
-
-        return $this;
-    }
-
-    /**
-     * @Groups({"channel", "user:collection:get", "user:item:get"})
-     */
-    public function getRoleName(): ?string
-    {
-        return $this->roleName;
-    }
-
-    public function setRoleName(string $roleName): self
-    {
-        $this->roleName = $roleName;
-
-        return $this;
     }
 
     public function getChannelProfile(): ?ChannelProfile
@@ -81,6 +45,18 @@ class ChannelRole
     public function setChannelProfile(?ChannelProfile $channelProfile): self
     {
         $this->channelProfile = $channelProfile;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(Role $role): self
+    {
+        $this->role = $role;
 
         return $this;
     }

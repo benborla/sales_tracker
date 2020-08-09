@@ -10,12 +10,16 @@ use function str_replace;
 
 class RoleKeyService
 {
-    public const PREFIX_ROLE = 'ROLE';
-    public const TYPE_READ_COLLECTION = 'READCOLLECTION';
+    public const TYPE_READ_COLLECTION = 'READ_COLLECTION';
     public const TYPE_CREATE = 'CREATE';
     public const TYPE_READ = 'READ';
     public const TYPE_UPDATE = 'UPDATE';
     public const TYPE_DELETE = 'DELETE';
+
+    public const METHOD_GET = 'GET';
+    public const METHOD_POST = 'POST';
+    public const METHOD_PATCH = 'PATCH';
+    public const METHOD_DELETE = 'DELETE';
 
     /**
      * @var \Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
@@ -108,6 +112,24 @@ class RoleKeyService
     }
 
     /**
+     * @param string $type
+     * @access public
+     * @return string
+     */
+    public function requestMethodMap(string $type): string
+    {
+        $methods = [
+          self::TYPE_READ_COLLECTION => self::METHOD_GET,
+          self::TYPE_CREATE => self::METHOD_POST,
+          self::TYPE_READ => self::METHOD_GET,
+          self::TYPE_UPDATE => self::METHOD_PATCH,
+          self::TYPE_DELETE => self::METHOD_DELETE
+        ];
+
+        return $methods[$type] ?? null;
+    }
+
+    /**
      * generateKey
      *
      * @param string $role
@@ -117,7 +139,7 @@ class RoleKeyService
      */
     public function generateKey(string $role, string $type): string
     {
-        return self::PREFIX_ROLE . "_{$role}_{$type}";
+        return "{$role}_{$type}";
     }
 
     public function convertToBasicDescription(string $generatedRole): string
