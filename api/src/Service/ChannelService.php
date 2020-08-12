@@ -22,11 +22,6 @@ use function date;
 use function explode;
 use function str_replace;
 
-/**
- * @TODO
- * [ ] When creating a new channel, it should create a default profile $channel_ADMIN profile
- * [ ] When a default channel profile admin is created, it should have all the roles available for the user
- */
 class ChannelService
 {
     /**

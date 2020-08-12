@@ -14,12 +14,18 @@ use function strtoupper;
 use function get_class;
 use function explode;
 
+/**
+ * @TODO
+ * [ ] Update voter to retrieve new format of roles
+ * [ ] GET COLLECTION should be moved to a data provider, it should not be handled here
+ */
 abstract class AbstractVoter extends Voter
 {
     protected const ROLE_KEY = 'ROLE';
     private const CACHE_KEY = 'user.stored.roles';
     private const CACHE_EXPIRY = 86400; // 24 hours
     private const CACHE_NAMESPACE = 'app';
+    private const IS_DEV = 'dev';
 
     /** KernelInterface $appKernel */
     private $appKernel;
@@ -54,7 +60,7 @@ abstract class AbstractVoter extends Voter
         }
 
         $rolesCache = $cache->getItem(self::CACHE_KEY);
-        if (!$rolesCache->isHit()) {
+        if (!$rolesCache->isHit() || $this->appKernel->getEnvironment() === self::IS_DEV) {
             foreach ($user->getUserProfiles() as $profile) {
                 $channel = strtoupper($profile->getProfile()->getChannel()->getName());
                 foreach ($profile->getProfile()->getRoles() as $role) {
