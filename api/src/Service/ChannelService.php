@@ -100,6 +100,15 @@ class ChannelService
             throw new RuntimeException('Unable to create channel');
         }
 
+        $channelProfile = $this->newChannelProfile($channel, $request);
+
+        $request->request->remove('name');
+        foreach ($this->applyAllRolesForAdmin() as $idx => $role) {
+            $request->request->set((string) $idx, ['id' => $role->getId()]);
+        }
+
+        $this->updateProfileRoles($request, $channelProfile);
+
         return $channel;
     }
 
@@ -111,7 +120,7 @@ class ChannelService
     public function newChannelProfile(Channel $channel, ?Request $request = null): ChannelProfile
     {
         $profileName = $this->defaultProfileName;
-        $createDefaultRoles = false;
+        $createDefaultRoles = true;
 
         if ($request instanceof Request) {
             $profileName = $request->get('profile');
@@ -129,15 +138,24 @@ class ChannelService
         return $channelProfile;
     }
 
+    private function applyAllRolesForAdmin()
+    {
+        $roles = $this->em->getRepository(Role::class)->findAll();
+        return $roles;
+
+    }
+
     /**
      * @param Request $request
      * @access public
      * @return null|ChannelProfile
      */
-    public function updateProfileRoles(Request $request): ?ChannelProfile
-    {
+    public function updateProfileRoles(
+        Request $request,
+        ?ChannelProfile $channelProfile = null
+    ): ?ChannelProfile {
         $roles = $request->request;
-        $profile = $request->attributes->get('data');
+        $profile = $channelProfile ?? $request->attributes->get('data');
 
         if (!$profile instanceof ChannelProfile) {
             return null;
@@ -145,6 +163,11 @@ class ChannelService
 
         foreach ($roles as $role) {
             $emRole = $this->em->find(Role::class, $role);
+
+            if (is_null($emRole)) {
+                continue;
+            }
+
             $channelRole = new ChannelRole();
             $channelRole->setChannelProfile($profile);
             $channelRole->setRole($emRole);

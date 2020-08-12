@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RoleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\UpdateRolesAction;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
@@ -29,21 +30,25 @@ class Role
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"channel", "channelProfile"})
      */
     private $roleKey;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"channel", "channelProfile"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups({"channel", "channelProfile"})
      */
     private $entity;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Groups({"channel", "channelProfile"})
      */
     private $method;
 

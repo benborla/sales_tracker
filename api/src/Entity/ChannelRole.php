@@ -29,6 +29,7 @@ class ChannelRole
     /**
      * @ORM\OneToOne(targetEntity=Role::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"channel", "channelProfile"})
      */
     private $role;
 
