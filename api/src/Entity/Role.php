@@ -57,6 +57,9 @@ class Role
         return $this->id;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getRoleKey(): ?string
     {
         return $this->roleKey;
@@ -69,6 +72,9 @@ class Role
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getDescription(): ?string
     {
         return $this->description;
@@ -81,6 +87,9 @@ class Role
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getEntity(): ?string
     {
         return $this->entity;
@@ -93,6 +102,9 @@ class Role
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getMethod(): ?string
     {
         return $this->method;

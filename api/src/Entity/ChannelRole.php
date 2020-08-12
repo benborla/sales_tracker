@@ -50,6 +50,9 @@ class ChannelRole
         return $this;
     }
 
+    /**
+     * @Groups({"user:collection:get", "user:item:get"})
+     */
     public function getRole(): ?Role
     {
         return $this->role;

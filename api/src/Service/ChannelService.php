@@ -33,7 +33,7 @@ class ChannelService
      * @var string
      * @access private
      */
-    private $defaultProfileName = 'ADMIN';
+    private $defaultProfileName = 'Administrator';
 
     /**
      * @var array
@@ -100,9 +100,12 @@ class ChannelService
             throw new RuntimeException('Unable to create channel');
         }
 
+        $request->request->set('profile', ' ' . $this->defaultProfileName);
         $channelProfile = $this->newChannelProfile($channel, $request);
 
         $request->request->remove('name');
+        $request->request->remove('profile');
+
         foreach ($this->applyAllRolesForAdmin() as $idx => $role) {
             $request->request->set((string) $idx, ['id' => $role->getId()]);
         }
@@ -123,7 +126,7 @@ class ChannelService
         $createDefaultRoles = true;
 
         if ($request instanceof Request) {
-            $profileName = $request->get('profile');
+            $profileName = $request->get('profile') ?: $request->request->get('profile');
             $createDefaultRoles = (bool) $request->get('hasDefaultRoles');
         }
 
