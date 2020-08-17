@@ -64,7 +64,7 @@ abstract class AbstractVoter extends Voter
             foreach ($user->getUserProfiles() as $profile) {
                 $channel = strtoupper($profile->getProfile()->getChannel()->getName());
                 foreach ($profile->getProfile()->getRoles() as $role) {
-                    $roles[] = $role->getRoleKey();
+                    $roles[] = $role->getRole()->getRoleKey();
                 }
             }
             $rolesCache->set(['roles' => $roles, 'channel' => $channel]);
@@ -75,9 +75,8 @@ abstract class AbstractVoter extends Voter
             $channel = $cacheItem['channel'] ?? null;
         }
 
-        $attribute = explode('_', $attribute);
-        $attribute = end($attribute);
-        $attribute = self::ROLE_KEY . '_' . $channel . '_' . $entity . '_' . $attribute;
+        $attribute = self::ROLE_KEY . '_' . $entity . '_' . $attribute;
+        // dump($attribute, in_array($attribute, $roles));die;
 
         return in_array($attribute, $roles);
     }

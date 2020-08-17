@@ -11,9 +11,9 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(
- *     attributes={"security"="is_granted('READ')"},
+ *     attributes={"security"="is_granted('ROLE_USER')"},
  *     collectionOperations={
- *          "get" = { "security" = "is_granted('INFORMATION_READCOLLECTION', object)" },
+ *          "get",
  *          "post" = { "security_post_denormalize" = "is_granted('CREATE', object)" }
  *     },
  *     itemOperations={
