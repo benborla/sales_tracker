@@ -54,7 +54,7 @@ services:
       arguments:
             - '@serializer.name_converter.camel_case_to_snake_case'
 
-    App\Doctrine\InformationExtension:
+    App\Doctrine\CollectionRoleCheckpointExtension:
       tags:
         - { name: api_platform.doctrine.orm.query_extension.collection }
         - { name: api_platform.doctrine.orm.query_extension.item }

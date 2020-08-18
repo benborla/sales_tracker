@@ -18,7 +18,7 @@ use function explode;
 use function end;
 use function in_array;
 
-final class InformationExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+final class CollectionRoleCheckpointExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     private const ROLE_COLLECTION = 'ROLE_%s_READ_COLLECTION';
 
