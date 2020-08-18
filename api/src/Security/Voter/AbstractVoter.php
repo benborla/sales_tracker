@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpKernel\KernelInterface;
+use App\Service\UserRolesService;
 
 use function strtoupper;
 use function get_class;
@@ -22,17 +23,15 @@ use function explode;
 abstract class AbstractVoter extends Voter
 {
     protected const ROLE_KEY = 'ROLE';
-    private const CACHE_KEY = 'user.stored.roles';
-    private const CACHE_EXPIRY = 86400; // 24 hours
-    private const CACHE_NAMESPACE = 'app';
-    private const IS_DEV = 'dev';
 
-    /** KernelInterface $appKernel */
-    private $appKernel;
+    /**
+     * @var \App\Service\UserRolesService
+     */
+    private $userRoleService;
 
-    public function __construct(KernelInterface $appKernel)
+    public function __construct(UserRolesService $userRoleService)
     {
-        $this->appKernel = $appKernel;
+        $this->userRoleService = $userRoleService;
     }
 
     /**
@@ -45,10 +44,9 @@ abstract class AbstractVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        $roles = [];
-        $channel = null;
+        $this->userRoleService->setUser($token->getUser());
+        $roles = $this->userRoleService->getRoles();
         $entity = $this->getEntityName($subject, $attribute);
-        $cache = new FilesystemAdapter(self::CACHE_NAMESPACE, self::CACHE_EXPIRY, $this->getCacheDir());
 
         if (is_null($entity)) {
             return false;
@@ -59,35 +57,9 @@ abstract class AbstractVoter extends Voter
             return false;
         }
 
-        $rolesCache = $cache->getItem(self::CACHE_KEY);
-        if (!$rolesCache->isHit() || $this->appKernel->getEnvironment() === self::IS_DEV) {
-            foreach ($user->getUserProfiles() as $profile) {
-                $channel = strtoupper($profile->getProfile()->getChannel()->getName());
-                foreach ($profile->getProfile()->getRoles() as $role) {
-                    $roles[] = $role->getRole()->getRoleKey();
-                }
-            }
-            $rolesCache->set(['roles' => $roles, 'channel' => $channel]);
-            $cache->save($rolesCache);
-        } else {
-            $cacheItem = $cache->getItem(self::CACHE_KEY)->get();
-            $roles = $cacheItem['roles'] ?? null;
-            $channel = $cacheItem['channel'] ?? null;
-        }
-
         $attribute = self::ROLE_KEY . '_' . $entity . '_' . $attribute;
-        // dump($attribute, in_array($attribute, $roles));die;
 
         return in_array($attribute, $roles);
-    }
-
-    /**
-     * @access private
-     * @return string
-     */
-    private function getCacheDir(): string
-    {
-        return $this->appKernel->getProjectDir() .'/var/' . $this->appKernel->getEnvironment() . '/cache';
     }
 
     /**

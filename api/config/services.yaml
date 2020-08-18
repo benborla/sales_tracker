@@ -53,3 +53,16 @@ services:
     App\Service\RoleKeyService:
       arguments:
             - '@serializer.name_converter.camel_case_to_snake_case'
+
+    App\Doctrine\InformationExtension:
+      tags:
+        - { name: api_platform.doctrine.orm.query_extension.collection }
+        - { name: api_platform.doctrine.orm.query_extension.item }
+
+    App\DataProvider\InformationCollectionDataProvider:
+      tags: [ { name: 'api_platform.collection_data_provider', priority: 1 } ]
+      # Autoconfiguration must be disabled to set a custom priority
+      autoconfigure: false
+      arguments:
+          $collectionExtensions: !tagged api_platform.doctrine.orm.query_extension.collection
+
