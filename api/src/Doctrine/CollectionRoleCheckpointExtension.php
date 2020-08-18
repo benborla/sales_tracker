@@ -87,6 +87,10 @@ final class CollectionRoleCheckpointExtension implements QueryCollectionExtensio
         $roles = $this->userRoleService->getRoles();
 
         if (!$this->hasAccessToCollection($role, $roles)) {
+            /** 
+             * @todo add a method here to check if the the entity supports a user property
+             * because not all entities has a user property
+             */
             $rootAlias = $queryBuilder->getRootAliases()[0];
             $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
             $queryBuilder->setParameter('current_user', $user->getId());
