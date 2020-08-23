@@ -66,3 +66,10 @@ services:
       arguments:
           $collectionExtensions: !tagged api_platform.doctrine.orm.query_extension.collection
 
+          
+    App\DataProvider\UserCollectionDataProvider:
+      tags: [ { name: 'api_platform.collection_data_provider', priority: 1 } ]
+      # Autoconfiguration must be disabled to set a custom priority
+      autoconfigure: false
+      arguments:
+          $collectionExtensions: !tagged api_platform.doctrine.orm.query_extension.collection

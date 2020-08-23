@@ -90,7 +90,6 @@ class RoleService
         $classes = array_map(function ($class) {
             $fragments = explode('\\', $class);
             $class = end($fragments);
-            // @todo find a way to include class name in the return
             return [$class => $this->roleKeyService->getKey(self::PREFIX_ROLE, $class)];
         }, $filtered);
 

@@ -77,23 +77,19 @@ final class CollectionRoleCheckpointExtension implements QueryCollectionExtensio
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if (Information::class !== $resourceClass) {
-            return;
-        }
-
         $entity = $this->getEntity($resourceClass);
         $role = $this->collectionRole($entity);
         $user = $this->security->getUser();
         $roles = $this->userRoleService->getRoles();
+        $entityRelAnchoredPropertyKey = $resourceClass::REL_PROPERTY_KEY ?: null;
 
         if (!$this->hasAccessToCollection($role, $roles)) {
-            /** 
-             * @todo add a method here to check if the the entity supports a user property
-             * because not all entities has a user property
-             */
             $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-            $queryBuilder->setParameter('current_user', $user->getId());
+
+            if (!is_null($entityRelAnchoredPropertyKey)) {
+                $queryBuilder->andWhere(sprintf("%s.$entityRelAnchoredPropertyKey = :current_user", $rootAlias));
+                $queryBuilder->setParameter('current_user', $user->getId());
+            }
         }
     }
 }

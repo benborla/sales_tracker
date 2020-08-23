@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\DataProvider;
 
-use App\Entity\Information;
-use App\Repository\InformationRepository;
+use App\Entity\User;
+use App\Repository\UserRepository;
 use App\DataProvider\AbstractRoleCollectionCheckpoint;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class InformationCollectionDataProvider extends AbstractRoleCollectionCheckpoint
+class UserCollectionDataProvider extends AbstractRoleCollectionCheckpoint
 {
     private $repository;
 
     public function __construct(
-        InformationRepository $repository,
+        UserRepository $repository,
         ManagerRegistry $managerRegistry,
         iterable $collectionExtensions
     ) {
@@ -34,7 +34,7 @@ class InformationCollectionDataProvider extends AbstractRoleCollectionCheckpoint
         string $operationName = null,
         array $context = []
     ): bool {
-        return Information::class === $resourceClass;
+        return User::class === $resourceClass;
     }
 
     public function getCollection(

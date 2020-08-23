@@ -22,15 +22,16 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ApiResource(
  *    forceEager=false,  
+ *     attributes={"security"="is_granted('ROLE_USER')"},
  *    collectionOperations={
- *      "get"={"security"="is_granted('ROLE_ADMIN')", "normalization_context"={"groups"="user:collection:get"}},
- *      "post"
+ *      "get"={"normalization_context"={"groups"="user:collection:get"}},
+ *      "post" = { "security_post_denormalize" = "is_granted('CREATE', object)" }
  *    },
  *    itemOperations={
- *      "get"={"normalization_context"={"groups"="user:item:get"}},
- *      "put",
- *      "patch",
- *      "delete"
+ *      "get"={"normalization_context"={"groups"="user:item:get"}, "security" = "is_granted('READ', object)" },
+ *      "put" = { "security" = "is_granted('UPDATE', object)" },
+ *      "patch" = { "security" = "is_granted('UPDATE', object)" },
+ *      "delete" = { "security" = "is_granted('DELETE', object)" }
  *    },
  *    normalizationContext={"groups"={"user:read", "user"}},
  *    denormalizationContext={"groups"={"user:write"}},
@@ -51,6 +52,8 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
 
     public const TYPE_STAFF = 'staff';
     public const TYPE_CUSTOMER = 'customer';
+
+    public const REL_PROPERTY_KEY = 'id';
 
     /**
      * @ORM\Id()

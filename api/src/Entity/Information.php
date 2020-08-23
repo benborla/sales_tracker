@@ -30,6 +30,8 @@ class Information
 {
     use TimestampableTrait;
 
+    public const REL_PROPERTY_KEY = 'user';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

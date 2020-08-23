@@ -29,14 +29,15 @@ class UserRolesService
     }
 
     /**
-     * @todo move user role retrieval here, including  the caching retrieveal and storage
+     * @param \App\Entity\User $user
+     * @return self
      */
     public function setUser(User $user): self
     {
         $this->user = $user;
 
         return $this;
-    }
+    } // End function setUser
 
     /**
      * @return \App\Entity\User

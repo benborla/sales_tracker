@@ -44,6 +44,8 @@ class Channel implements BlameableInterface
     use TimestampableTrait;
     use BlameableTrait;
 
+    public const REL_PROPERTY_KEY = '';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
