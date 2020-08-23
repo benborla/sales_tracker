@@ -16,17 +16,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *    attributes={"security"="is_granted('ROLE_USER')"},
  *    collectionOperations={
  *        "post"={
- *            "controller"=NewChannelAction::class
+ *            "controller"=NewChannelAction::class,
+ *            "security_post_denormalize" = "is_granted('CREATE', object)"
  *        },
  *        "get"
  *    },
  *    itemOperations={
- *      "get",
- *      "put",
- *      "patch",
- *      "delete",
+ *      "get" = { "security" = "is_granted('READ', object)" },
+ *      "put" = { "security" = "is_granted('UPDATE', object)" },
+ *      "patch" = { "security" = "is_granted('UPDATE', object)" },
+ *      "delete" = { "security" = "is_granted('DELETE', object)" },
  *      "post_new_profile"={
  *          "controller"=NewProfileAction::class,
  *          "method"="POST",

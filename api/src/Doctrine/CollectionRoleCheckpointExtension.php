@@ -89,6 +89,9 @@ final class CollectionRoleCheckpointExtension implements QueryCollectionExtensio
             if (!is_null($entityRelAnchoredPropertyKey)) {
                 $queryBuilder->andWhere(sprintf("%s.$entityRelAnchoredPropertyKey = :current_user", $rootAlias));
                 $queryBuilder->setParameter('current_user', $user->getId());
+            } else {
+                $queryBuilder->andWhere(sprintf('%s.id = :fake_id', $rootAlias));
+                $queryBuilder->setParameter('fake_id', '-1');
             }
         }
     }
