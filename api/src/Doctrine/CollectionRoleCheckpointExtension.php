@@ -17,6 +17,7 @@ use function sprintf;
 use function explode;
 use function end;
 use function in_array;
+use function preg_replace;
 
 final class CollectionRoleCheckpointExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
@@ -67,6 +68,7 @@ final class CollectionRoleCheckpointExtension implements QueryCollectionExtensio
 
     public function collectionRole(string $entity): string
     {
+        $entity = strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $entity));
         return sprintf(self::ROLE_COLLECTION, strtoupper($entity));
     }
 

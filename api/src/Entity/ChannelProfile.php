@@ -12,16 +12,17 @@ use App\Controller\UpdateProfileRolesAction;
 
 /**
  * @ApiResource(
+ *    attributes={"security"="is_granted('ROLE_USER')"},
  *    normalizationContext={"groups"={"channelProfile:read", "channelProfile"}},
  *    collectionOperations={
- *        "post",
- *        "get"
+ *        "get",
+ *        "post" = { "security_post_denormalize" = "is_granted('CREATE', object)" }
  *    },
  *    itemOperations={
- *        "get",
- *        "put",
- *        "patch",
- *        "delete",
+ *        "get" = { "security" = "is_granted('READ', object)" },
+ *        "put" = { "security" = "is_granted('UPDATE', object)" },
+ *        "patch" = { "security" = "is_granted('UPDATE', object)" },
+ *        "delete" = { "security" = "is_granted('DELETE', object)" },
  *        "update_profile_roles"={
  *            "method"="POST",
  *            "controller"=UpdateProfileRolesAction::class,
@@ -34,6 +35,8 @@ use App\Controller\UpdateProfileRolesAction;
  */
 class ChannelProfile
 {
+    public const REL_PROPERTY_KEY = '';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
