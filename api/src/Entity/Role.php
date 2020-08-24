@@ -31,7 +31,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Role
 {
-    public const REL_PROPERTY_KEY = 'roleKey';
+    public const REL_PROPERTY_KEY = '';
 
     /**
      * @ORM\Id()
