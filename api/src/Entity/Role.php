@@ -10,17 +10,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *    attributes={"security"="is_granted('ROLE_USER')"},
  *    collectionOperations={
- *        "post",
- *        "get"={
- *            "controller"=UpdateRolesAction::class
+ *        "post" = { "security_post_denormalize" = "is_granted('CREATE', object)" },
+ *        "get",
+ *        "get_update_roles"={
+ *            "method"="GET",
+ *            "controller"=UpdateRolesAction::class,
+ *            "path"="roles/push"
  *        }
- *    }
+ *    },
+ *   itemOperations={
+ *        "get" = { "security" = "is_granted('READ', object)" },
+ *        "put" = { "security" = "is_granted('UPDATE', object)" },
+ *        "patch" = { "security" = "is_granted('UPDATE', object)" },
+ *        "delete" = { "security" = "is_granted('DELETE', object)" }
+ *     },
  * )
  * @ORM\Entity(repositoryClass=RoleRepository::class)
  */
 class Role
 {
+    public const REL_PROPERTY_KEY = 'roleKey';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

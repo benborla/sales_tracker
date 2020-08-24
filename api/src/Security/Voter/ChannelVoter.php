@@ -6,7 +6,7 @@ use App\Entity\Channel;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use App\Security\Voter\AbstractVoter;
 
-class UserVoter extends AbstractVoter
+class ChannelVoter extends AbstractVoter
 {
     protected function supports($attribute, $subject): bool
     {

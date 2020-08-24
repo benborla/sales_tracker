@@ -93,7 +93,7 @@ final class CollectionRoleCheckpointExtension implements QueryCollectionExtensio
                 $queryBuilder->setParameter('current_user', $user->getId());
             } else {
                 $queryBuilder->andWhere(sprintf('%s.id = :fake_id', $rootAlias));
-                $queryBuilder->setParameter('fake_id', '-1');
+                $queryBuilder->setParameter('fake_id', 'asdf');
             }
         }
     }

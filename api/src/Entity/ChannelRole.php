@@ -27,11 +27,11 @@ class ChannelRole
     private $channelProfile;
 
     /**
-     * @ORM\OneToOne(targetEntity=Role::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Role::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"channel", "channelProfile"})
      */
     private $role;
+
 
     public function getId(): ?int
     {
@@ -58,7 +58,7 @@ class ChannelRole
         return $this->role;
     }
 
-    public function setRole(Role $role): self
+    public function setRole(?Role $role): self
     {
         $this->role = $role;
 
