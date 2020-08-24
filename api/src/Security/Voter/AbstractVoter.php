@@ -74,7 +74,8 @@ abstract class AbstractVoter extends Voter
             return current($entity);
         } else {
             $namespaceFragments = explode('\\', get_class($subject));
-            return strtoupper(end($namespaceFragments));
+            $entity = strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', end($namespaceFragments)));
+            return strtoupper($entity);
         }
     }
 }

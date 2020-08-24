@@ -2,15 +2,15 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Information;
+use App\Entity\ChannelProfile;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use App\Security\Voter\AbstractVoter;
 
-class InformationVoter extends AbstractVoter
+class ChannelProfileVoter extends AbstractVoter
 {
     protected function supports($attribute, $subject): bool
     {
-        return $subject instanceof Information;
+        return $subject instanceof ChannelProfile;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
