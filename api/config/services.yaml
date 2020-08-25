@@ -10,9 +10,23 @@ parameters:
     - { key: ROLE_USER, value: User, order: -1 }
     - { key: ROLE_TEAM_LEADER, value: Team Leader, order: 2 }
     - { key: ROLE_CUSTOMER_SUPPORT, value: Customer Support, order: 3 }
-  account_types:
-    - TYPE_STAFF
-    - TYPE_CUSTOMER
+
+  super_admin_roles:
+    - ROLE_ROLE_READ_COLLECTION
+    - ROLE_ROLE_CREATE
+    - ROLE_ROLE_READ
+    - ROLE_ROLE_UPDATE
+    - ROLE_ROLE_DELETE
+    - ROLE_CHANNEL_READ_COLLECTION
+    - ROLE_CHANNEL_CREATE
+    - ROLE_CHANNEL_UPDATE
+    - ROLE_CHANNEL_DELETE
+    - ROLE_CHANNEL_PROFILE_READ_COLLECTION
+    - ROLE_CHANNEL_READ_COLLECTION
+    - ROLE_USER_PROFILE_READ_COLLECTION
+    - ROLE_USER_PROFILE_CREATE
+    - ROLE_USER_PROFILE_UPDATE
+    - ROLE_USER_PROFILE_DELETE
 
 services:
     # default configuration for services in *this* file
