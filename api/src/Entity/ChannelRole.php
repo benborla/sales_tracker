@@ -8,11 +8,24 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *    collectionOperations={
+ *        "post" = { "security_post_denormalize" = "is_granted('CREATE', object)" },
+ *        "get"
+ *    },
+ *   itemOperations={
+ *        "get" = { "security" = "is_granted('READ', object)" },
+ *        "put" = { "security" = "is_granted('UPDATE', object)" },
+ *        "patch" = { "security" = "is_granted('UPDATE', object)" },
+ *        "delete" = { "security" = "is_granted('DELETE', object)" }
+ *     },
+ * )
  * @ORM\Entity(repositoryClass=ChannelRoleRepository::class)
  */
 class ChannelRole
 {
+    public const REL_PROPERTY_KEY = '';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
