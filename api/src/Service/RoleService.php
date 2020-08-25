@@ -57,15 +57,17 @@ class RoleService
         $roles = $this->applyAccessRoles();
         $updatedRoles = [];
         foreach ($roles as $roleKey => $role) {
-            $entity = new Role();
-            $entity->setRoleKey($roleKey);
-            $entity->setMethod($role['method']);
-            $entity->setDescription($role['description']);
-            $entity->setEntity($role['entity']);
+          if (is_null($this->em->getRepository(Role::class)->findOneBy(['roleKey' => $roleKey]))) {
+             $entity = new Role();
+              $entity->setRoleKey($roleKey);
+              $entity->setMethod($role['method']);
+              $entity->setDescription($role['description']);
+              $entity->setEntity($role['entity']);
 
-            $this->em->persist($entity);
-            $this->em->flush();
-            $updatedRoles[] = $entity;
+              $this->em->persist($entity);
+              $this->em->flush();
+              $updatedRoles[] = $entity;
+          }
         }
 
         return $updatedRoles;
