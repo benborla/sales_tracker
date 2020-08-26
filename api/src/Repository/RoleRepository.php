@@ -14,10 +14,24 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RoleRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $superAdminRoles = [];
+    
+    public function __construct(ManagerRegistry $registry, array $superAdminRoles = [])
     {
+        $this->superAdminRoles = $superAdminRoles;
         parent::__construct($registry, Role::class);
     }
+
+    public function getNotSuperAdminRoles()
+    {
+        $qb = $this->createQueryBuilder('e');
+        return $this->createQueryBuilder('r')
+          ->andWhere($qb->expr()->notIn('r.roleKey', ':values'))
+          ->setParameter('values', $this->superAdminRoles)
+          ->getQuery()
+          ->getResult();
+    }
+  
 
     // /**
     //  * @return Role[] Returns an array of Role objects

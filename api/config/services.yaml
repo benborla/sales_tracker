@@ -11,7 +11,8 @@ parameters:
     - { key: ROLE_TEAM_LEADER, value: Team Leader, order: 2 }
     - { key: ROLE_CUSTOMER_SUPPORT, value: Customer Support, order: 3 }
 
-  super_admin_roles:
+  superAdminRoles:
+    - ROLE_USER_READ_COLLECTION
     - ROLE_ROLE_READ_COLLECTION
     - ROLE_ROLE_CREATE
     - ROLE_ROLE_READ
@@ -63,6 +64,9 @@ services:
       arguments: 
             - '@security.token_storage'
             - '%roles%'
+
+    App\Repository\RoleRepository:
+      $superAdminRoles: '%superAdminRoles%'
 
     App\Service\RoleKeyService:
       arguments:

@@ -138,7 +138,7 @@ class ChannelService
 
     private function applyAllRolesForAdmin()
     {
-        $roles = $this->em->getRepository(Role::class)->findAll();
+        $roles = $this->em->getRepository(Role::class)->getNotSuperAdminRoles();
         return $roles;
 
     }

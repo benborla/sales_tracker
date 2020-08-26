@@ -64,7 +64,7 @@ class ChannelRole
     }
 
     /**
-     * @Groups({"user:collection:get", "user:item:get"})
+     * @Groups({"user:collection:get", "user:item:get", "channelProfile:read"})
      */
     public function getRole(): ?Role
     {
