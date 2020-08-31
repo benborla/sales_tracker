@@ -116,7 +116,7 @@ class Channel implements BlameableInterface
         return $this;
     }
 
-    public function getIsActive(): ?bool
+    public function isActive(): ?bool
     {
         return $this->isActive;
     }
@@ -128,7 +128,7 @@ class Channel implements BlameableInterface
         return $this;
     }
 
-    public function getIsArchived(): ?bool
+    public function isArchived(): ?bool
     {
         return $this->isArchived;
     }

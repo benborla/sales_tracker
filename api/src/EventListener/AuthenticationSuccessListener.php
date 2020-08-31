@@ -7,29 +7,77 @@ namespace App\EventListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Channel;
+
+use function array_keys;
+use function in_array;
 
 class AuthenticationSuccessListener
 {
-  /**
-   * @param AuthenticationSuccessEvent $event
-   */
-  public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
-  {
-      $data = $event->getData();
-      $user = $event->getUser();
 
-      if (!$user instanceof UserInterface) {
-          return;
-      }
+    private const GET_CHANNEL_COLLECTION = 'ROLE_CHANNEL_READ_COLLECTION';
 
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     * @access private
+     */
+    private $em;
 
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
-      $event->roles = $user->getRoles();
-      $data['code'] = $event->getResponse()->getStatusCode();
-      $data['data'] = array(
-          'roles' => $user->getRoles(),
-      );
+    /**
+     * @param AuthenticationSuccessEvent $event
+     */
+    public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
+    {
+        $data = $event->getData();
+        $user = $event->getUser();
+        $channels = [];
+        $roles = [];
 
-      $event->setData($data);
-  }
+        if (!$user instanceof UserInterface) {
+            return;
+        }
+
+        foreach ($user->getUserProfiles() as $idx => $profile) {
+            if ($profile->getProfile()->getChannel()->isActive() || 
+              !$profile->getProfile()->getChannel()->isArchived()
+            ) {
+                $channels[$profile->getProfile()->getChannel()->getName()] = 1;
+            }
+
+            foreach ($profile->getProfile()->getRoles() as $roleIdx => $role) {
+                $roles[$role->getRole()->getRoleKey()] = $role->getRole()->getEntity();
+            }
+        }
+
+        $roles = array_keys($roles);
+
+        // check if the user has access to read all channels
+        if (in_array(self::GET_CHANNEL_COLLECTION, $roles)) {
+            $channels = [];
+            $channelRepo = $this->em->getRepository(Channel::class)->findAll();
+
+            if ($channelRepo) {
+                foreach ($channelRepo as $idx => $channel) {
+                    if ($channel instanceof Channel) {
+                        $channels[$channel->getName()] = 1;
+                    }
+                }
+            }
+        }
+
+        $event->roles = $user->getRoles();
+        $data['code'] = $event->getResponse()->getStatusCode();
+        $data['data'] = [
+            'channels' => array_keys($channels),
+            'roles' => $roles
+        ];
+
+        $event->setData($data);
+    }
 }
