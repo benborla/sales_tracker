@@ -71,9 +71,16 @@ class AuthenticationSuccessListener
             }
         }
 
+        /**
+         * @todo add active user checking, if the user is inactive, it should
+         * not be able to login
+         */
         $event->roles = $user->getRoles();
         $data['code'] = $event->getResponse()->getStatusCode();
         $data['data'] = [
+            'email' => $user->getEmail(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
             'channels' => array_keys($channels),
             'roles' => $roles
         ];
