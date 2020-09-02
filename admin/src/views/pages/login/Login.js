@@ -55,7 +55,9 @@ const Login = (props) => {
 
     const response = unwrapResult(await dispatch(authorize({ email, password })))
     if (response.code === 200) {
+      console.log('should redirect to /')
       history.push('/')
+      console.log('done redirecting')
     } else {
       if (!state.loading) {
         enableForm(e)

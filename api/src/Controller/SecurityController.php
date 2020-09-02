@@ -6,6 +6,9 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\UserRolesService;
+
+use function array_merge;
 
 /**
  * SecurityController
@@ -23,8 +26,14 @@ class SecurityController extends AbstractController
      * @access public
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function user()
+    public function user(UserRolesService $userRoleService)
     {
-        return new JsonResponse($this->getUser()->toArray());
+        $user = $this->getUser();
+        $calculatedInfo = $userRoleService->getCalculatedInfo($user);
+
+        return new JsonResponse(array_merge(
+            $this->getUser()->toArray(),
+            $calculatedInfo
+        ));
     }
 }

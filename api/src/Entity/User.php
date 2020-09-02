@@ -50,10 +50,8 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
     use TimestampableTrait;
     use BlameableTrait;
 
-    public const TYPE_STAFF = 'staff';
-    public const TYPE_CUSTOMER = 'customer';
-
     public const REL_PROPERTY_KEY = 'id';
+    private const GET_CHANNEL_COLLECTION = 'ROLE_CHANNEL_READ_COLLECTION';
 
     /**
      * @ORM\Id()
@@ -156,9 +154,8 @@ class User extends AbstractEntity implements UserInterface, BlameableInterface
 
     public function __construct()
     {
-        //...
-
-        $this->userProfiles = new ArrayCollection();    }
+      $this->userProfiles = new ArrayCollection();
+    }
 
     /**
      * @Groups({"user:collection:get", "user:item:get"})

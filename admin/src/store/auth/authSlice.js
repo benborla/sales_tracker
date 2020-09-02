@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
-import Cookies from 'js-cookie'
 
 export const authorize = createAsyncThunk(
   'api/authenticate',
@@ -10,7 +9,7 @@ export const authorize = createAsyncThunk(
 export const logout = createAsyncThunk(
   'api/logout',
   () => {
-    Cookies.remove('atk')
+    localStorage.removeItem('atk')
   }
 )
 
@@ -20,11 +19,13 @@ export const authSlice = createSlice({
     loading: false,
     token: null,
     data: null,
-    error: null
+    error: null,
+    status: 401
   },
   reducers: {},
   extraReducers: {
     [authorize.pending]: (state, action) => {
+      localStorage.removeItem('atk')
       state.loading = true
     },
     [authorize.fulfilled]: (state, action) => {
@@ -33,7 +34,9 @@ export const authSlice = createSlice({
         state.token = action.payload.token
         state.data = action.payload.data
         state.error = null
-        Cookies.set('atk', state.token)
+        state.status = action.payload.code
+
+        localStorage.setItem('atk', state.token)
       } else {
         state.token = null
         state.data = null

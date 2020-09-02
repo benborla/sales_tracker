@@ -1,14 +1,19 @@
 import ApiService from './ApiService'
-import Cookies from 'js-cookie'
 
 const authenticate = async (email, password) => {
-  const response = await ApiService.post('/auth', { email, password })
+  const noNeedForHeaderAuth = true
+  const response = await ApiService.post('/auth', { email, password }, noNeedForHeaderAuth)
   return response
 }
 
-const isAuthenticated = async () => {
-  const user = await ApiService.get('/current-user')
-  if (typeof user.id !== 'undefined') {
+const isAuthenticated = () => {
+  const user = ApiService.get('/api/current-user')
+
+  if (user.code === 401) {
+    return false
+  }
+
+  if (user) {
     return true
   }
 
@@ -16,7 +21,7 @@ const isAuthenticated = async () => {
 }
 
 const getToken = () => {
-  return Cookies.get('atk')
+  return localStorage.getItem('atk')
 }
 
 export default {

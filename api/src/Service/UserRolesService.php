@@ -7,6 +7,11 @@ namespace App\Service;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use App\Entity\User;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Channel;
+
+use function in_array;
+use function array_unique;
 
 class UserRolesService
 {
@@ -14,18 +19,26 @@ class UserRolesService
     private const CACHE_EXPIRY = 86400; // 24 hours
     private const CACHE_NAMESPACE = 'app';
     private const IS_DEV = 'dev';
+    private const GET_CHANNEL_COLLECTION = 'ROLE_CHANNEL_READ_COLLECTION';
 
     /**
      * @var \App\Entity\User
      */
     private $user;
 
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     * @access private
+     */
+    private $em;
+
     /** KernelInterface $appKernel */
     private $appKernel;
 
-    public function __construct(KernelInterface $appKernel)
+    public function __construct(KernelInterface $appKernel, EntityManagerInterface $em)
     {
         $this->appKernel = $appKernel;
+        $this->em = $em;
     }
 
     /**
@@ -88,4 +101,50 @@ class UserRolesService
         return $this->appKernel->getProjectDir() .'/var/' . $this->appKernel->getEnvironment() . '/cache';
     }
 
+    /**
+     * @param null|\App\Entity\User $user
+     * @return array
+     */
+    public function getCalculatedInfo(?User $user = null): array
+    {
+        $info = ['channels' => [], 'roles' => []];
+
+        if (!$user instanceof User) {
+            return $info;
+        }
+
+        $channels = [];
+        $roles = [];
+
+        foreach ($user->getUserProfiles() as $idx => $profile) {
+            if ($profile->getProfile()->getChannel()->isActive() || 
+              !$profile->getProfile()->getChannel()->isArchived()
+            ) {
+                $channels[] = $profile->getProfile()->getChannel()->getName();
+            }
+
+            foreach ($profile->getProfile()->getRoles() as $roleIdx => $role) {
+                $roles[] = $role->getRole()->getRoleKey();
+            }
+        }
+
+        // check if the user has access to read all channels
+        if (in_array(self::GET_CHANNEL_COLLECTION, $roles)) {
+            $channels = [];
+            $channelRepo = $this->em->getRepository(Channel::class)->findAll();
+
+            if ($channelRepo) {
+                foreach ($channelRepo as $idx => $channel) {
+                    if ($channel instanceof Channel) {
+                        $channels[] = $channel->getName();
+                    }
+                }
+            }
+        }
+
+        return [
+            'channels' => array_unique($channels),
+            'roles' => array_unique($roles)
+        ];
+    }
 }
