@@ -47,7 +47,7 @@ class AuthenticationSuccessListener
          * @todo add active user checking, if the user is inactive, it should
          * not be able to login
          */
-        $data['code'] = $event->getResponse()->getStatusCode();
+        $data['status'] = $event->getResponse()->getStatusCode();
         $data['data'] = array_merge([
             'email' => $user->getEmail(),
             'firstName' => $user->getFirstName(),

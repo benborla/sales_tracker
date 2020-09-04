@@ -32,6 +32,7 @@ class SecurityController extends AbstractController
         $calculatedInfo = $userRoleService->getCalculatedInfo($user);
 
         return new JsonResponse(array_merge(
+            ['status' => JsonResponse::HTTP_OK],
             $this->getUser()->toArray(),
             $calculatedInfo
         ));

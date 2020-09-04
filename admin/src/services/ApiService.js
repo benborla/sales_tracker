@@ -4,7 +4,6 @@ const api = process.env.REACT_APP_ENTRYPOINT_API
 const endpoint = path => api + path
 const options = (method = 'GET', path = '', isAnonymous = false) => {
   const token = localStorage.getItem('atk')
-  console.log({ option: token })
   const auth = isAnonymous ? {} : (token !== null && typeof token !== 'undefined') ? { Authorization: `Bearer ${token}` } : {}
   const headerOptions = { method, headers: { 'Content-Type': 'application/ld+json', ...auth } }
 

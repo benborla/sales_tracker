@@ -6,18 +6,9 @@ const authenticate = async (email, password) => {
   return response
 }
 
-const isAuthenticated = () => {
-  const user = ApiService.get('/api/current-user')
-
-  if (user.code === 401) {
-    return false
-  }
-
-  if (user) {
-    return true
-  }
-
-  return false
+const isAuthenticated = async () => {
+  const response = await ApiService.get('/api/user')
+  return response
 }
 
 const getToken = () => {

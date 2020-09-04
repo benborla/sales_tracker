@@ -10,7 +10,7 @@ import {
   CCol,
   CRow
 } from '@coreui/react'
-import routes from '../../../routes'
+import AppRoutes from '../../../routes/AppRoutes'
 
 const Breadcrumbs = () => {
   return (
@@ -32,7 +32,7 @@ const Breadcrumbs = () => {
           </CCardHeader>
           <CCardBody>
             <h6>CBreadcrumbRouter wrapper component</h6>
-            <CBreadcrumbRouter routes={routes}/>
+            <CBreadcrumbRouter routes={AppRoutes}/>
             <h6>Manual</h6>
             <CBreadcrumb>
               <CBreadcrumbItem>

@@ -1,20 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import AuthService from '../../services/AuthService'
 
-export const authorize = createAsyncThunk(
-  'authentication',
-  ({ email, password }) => AuthService.authenticate(email, password)
+export const checkUser = createAsyncThunk(
+  'check-user',
+  () => AuthService.isAuthenticated()
 )
 
-export const logout = createAsyncThunk(
-  'api/logout',
-  () => {
-    localStorage.removeItem('atk')
-  }
-)
-
-export const authSlice = createSlice({
-  name: 'auth',
+export const checkUserSlice = createSlice({
+  name: 'checkUser',
   initialState: {
     loading: false,
     token: null,
@@ -24,19 +17,16 @@ export const authSlice = createSlice({
   },
   reducers: {},
   extraReducers: {
-    [authorize.pending]: (state, action) => {
-      localStorage.removeItem('atk')
+    [checkUser.pending]: (state, action) => {
       state.loading = true
     },
-    [authorize.fulfilled]: (state, action) => {
+    [checkUser.fulfilled]: (state, action) => {
       state.loading = false
       if (action.payload.status === 200) {
         state.token = action.payload.token
-        state.data = action.payload.data
+        state.data = action.payload
         state.error = null
         state.status = action.payload.status
-
-        localStorage.setItem('atk', state.token)
       } else {
         state.token = null
         state.data = null
@@ -46,4 +36,4 @@ export const authSlice = createSlice({
   }
 })
 
-export default authSlice.reducer
+export default checkUserSlice.reducer

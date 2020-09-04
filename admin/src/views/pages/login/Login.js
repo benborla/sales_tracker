@@ -66,13 +66,17 @@ const Login = (props) => {
   }
 
   const disableForm = () => {
-    emailEl.current.setAttribute('disabled', 'disabled')
-    passEl.current.setAttribute('disabled', 'disabled')
+    if (emailEl.current !== null) {
+      emailEl.current.setAttribute('disabled', 'disabled')
+      passEl.current.setAttribute('disabled', 'disabled')
+    }
   }
 
   const enableForm = () => {
-    emailEl.current.removeAttribute('disabled', 'disabled')
-    passEl.current.removeAttribute('disabled', 'disabled')
+    if (emailEl.current !== null) {
+      emailEl.current.removeAttribute('disabled', 'disabled')
+      passEl.current.removeAttribute('disabled', 'disabled')
+    }
   }
 
   return (

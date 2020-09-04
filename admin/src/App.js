@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { HashRouter } from 'react-router-dom'
 import './scss/style.scss'
-import Routes from './constants/routes'
+import BaseRouter from './routes/BaseRouter'
 
 const loading = (
   <div className='pt-3 text-center'>
@@ -13,7 +13,7 @@ class App extends Component {
     return (
       <HashRouter>
         <React.Suspense fallback={loading}>
-          <Routes />
+          <BaseRouter />
         </React.Suspense>
       </HashRouter>
     )

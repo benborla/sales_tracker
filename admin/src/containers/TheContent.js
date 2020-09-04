@@ -7,7 +7,7 @@ import {
 import { CContainer, CFade } from '@coreui/react'
 
 // routes config
-import routes from '../routes'
+import AppRoutes from '../routes/AppRoutes'
   
 const loading = (
   <div className="pt-3 text-center">
@@ -21,7 +21,7 @@ const TheContent = () => {
       <CContainer fluid>
         <Suspense fallback={loading}>
           <Switch>
-            {routes.map((route, idx) => {
+            {AppRoutes.map((route, idx) => {
               return route.component && (
                 <Route
                   key={idx}

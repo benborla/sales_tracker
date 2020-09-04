@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import {
   CCreateElement,
   CSidebar,
@@ -16,10 +16,16 @@ import CIcon from '@coreui/icons-react'
 
 // sidebar nav config
 import navigation from './_nav'
+import UserAccessToNav from '../services/UserAccessToNav'
 
 const TheSidebar = () => {
   const dispatch = useDispatch()
   const show = useSelector(state => state.sidebarShow)
+  const user = useSelector(state => state.auth, shallowEqual)
+
+  useEffect(() => {
+    console.log({ user })
+  }, [])
 
   return (
     <CSidebar
