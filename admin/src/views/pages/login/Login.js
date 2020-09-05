@@ -41,7 +41,7 @@ const Login = (props) => {
       setAlertType('danger')
     }
 
-    if (state.token !== null && state.error === null) {
+    if (state.status === 200) {
       setMessage('Redirecting...')
       setVisible(10)
       setAlertType('success')
@@ -54,10 +54,9 @@ const Login = (props) => {
     disableForm()
 
     const response = unwrapResult(await dispatch(authorize({ email, password })))
-    if (response.code === 200) {
-      console.log('should redirect to /')
+    if (response.status === 200) {
       history.push('/')
-      console.log('done redirecting')
+      window.location.reload()
     } else {
       if (!state.loading) {
         enableForm(e)
