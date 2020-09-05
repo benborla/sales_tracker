@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import {
   CCreateElement,
@@ -13,36 +13,30 @@ import {
 } from '@coreui/react'
 
 import CIcon from '@coreui/icons-react'
-
-// sidebar nav config
-import navigation from './_nav'
+import { sidebar } from '../store/ui/sidebarSlice'
 import UserAccessToNav from '../services/UserAccessToNav'
 
 const TheSidebar = () => {
   const dispatch = useDispatch()
-  const show = useSelector(state => state.sidebarShow)
-  const user = useSelector(state => state.auth, shallowEqual)
+  const show = useSelector(state => state.sidebar.sidebarShow)
+  const user = useSelector(state => state.checkUser, shallowEqual)
+  const [navigation, setNavigation] = useState()
 
   useEffect(() => {
-    console.log({ user })
+    setNavigation(UserAccessToNav.getNav(user.data))
   }, [])
+
+  const handleShowChange = val => (
+    dispatch(sidebar.actions.changeState({ type: 'set', sidebarShow: val }))
+  )
 
   return (
     <CSidebar
       show={show}
-      onShowChange={(val) => dispatch({type: 'set', sidebarShow: val })}
+       onShowChange={handleShowChange}
     >
-      <CSidebarBrand className="d-md-down-none" to="/">
-        <CIcon
-          className="c-sidebar-brand-full"
-          name="logo-negative"
-          height={35}
-        />
-        <CIcon
-          className="c-sidebar-brand-minimized"
-          name="sygnet"
-          height={35}
-        />
+      <CSidebarBrand className='d-md-down-none' to='/'>
+        <h4>Sales Tracker</h4>
       </CSidebarBrand>
       <CSidebarNav>
 
@@ -56,7 +50,7 @@ const TheSidebar = () => {
           }}
         />
       </CSidebarNav>
-      <CSidebarMinimizer className="c-d-md-down-none"/>
+      <CSidebarMinimizer className='c-d-md-down-none'/>
     </CSidebar>
   )
 }
