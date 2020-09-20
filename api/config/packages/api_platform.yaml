@@ -26,3 +26,7 @@ api_platform:
             type: header
     eager_loading:
         force_eager: true
+    collection:
+      pagination:
+        enabled: true
+        items_per_page: 20

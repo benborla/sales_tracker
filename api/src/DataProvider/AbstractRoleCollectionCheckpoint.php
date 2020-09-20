@@ -9,6 +9,7 @@ use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Doctrine\CollectionRoleCheckpointExtension;
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
 
 abstract class AbstractRoleCollectionCheckpoint implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -37,7 +38,7 @@ abstract class AbstractRoleCollectionCheckpoint implements CollectionDataProvide
      * @throws \ApiPlatform\Core\Exception\ResourceClassNotSupportedException
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = []): PaginatorInterface
     {
         $manager = $this->managerRegistry->getManagerForClass($resourceClass);
 

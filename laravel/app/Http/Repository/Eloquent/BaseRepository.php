@@ -42,4 +42,33 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         return $this->model->find($id);
     }
+
+    /**
+     * @return array
+     */
+    public function getFillable(): array
+    {
+        return $this->model->getFillable();
+    }
+
+    /**
+     * @param int $id
+     * @param array $attributes
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function update(int $id, array $attributes): Model
+    {
+        if ($this->find($id)->update($attributes)) {
+            return $this->find($id);
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id): bool
+    {
+        return $this->find($id)->delete();
+    }
 }

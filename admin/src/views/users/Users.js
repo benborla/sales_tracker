@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import {
-  CBadge,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
-  CDataTable,
   CRow,
-  CPagination
+  CDataTable,
+  CPagination,
+  CBadge
 } from '@coreui/react'
-
-import usersData from './UsersData'
-
-const getBadge = status => {
-  switch (status) {
-    case 'Active': return 'success'
-    case 'Inactive': return 'secondary'
-    case 'Pending': return 'warning'
-    case 'Banned': return 'danger'
-    default: return 'primary'
-  }
-}
+import DataTable from '../../components/datatable/DataTable'
+import {
+  fetchUsers,
+} from './UsersSlice'
 
 const Users = () => {
+  const dispatch = useDispatch()
+  const users = useSelector(state => state.users, shallowEqual)
+  const fields = ['email', 'lastName', 'firstName', 'action']
+
+  useEffect(() => {
+    const retrieveUsers = async () => {
+      return dispatch(await fetchUsers())
+    }
+    retrieveUsers()
+  }, [])
+
+  useEffect(() => {
+    console.log({ users })
+  }, [users])
+
   const history = useHistory()
   const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
@@ -39,43 +47,37 @@ const Users = () => {
 
   return (
     <CRow>
-      <CCol xl={6}>
+      <CCol xl={12}>
         <CCard>
           <CCardHeader>
             Users
-            <small className="text-muted"> example</small>
+            <small className='text-muted'> example</small>
           </CCardHeader>
           <CCardBody>
-          <CDataTable
-            items={usersData}
-            fields={[
-              { key: 'name', _classes: 'font-weight-bold' },
-              'registered', 'role', 'status'
-            ]}
-            hover
-            striped
-            itemsPerPage={5}
-            activePage={page}
-            clickableRows
-            onRowClick={(item) => history.push(`/users/${item.id}`)}
-            scopedSlots = {{
-              'status':
-                (item)=>(
-                  <td>
-                    <CBadge color={getBadge(item.status)}>
-                      {item.status}
-                    </CBadge>
-                  </td>
-                )
-            }}
-          />
-          <CPagination
-            activePage={page}
-            onActivePageChange={pageChange}
-            pages={5}
-            doubleArrows={false} 
-            align="center"
-          />
+            <CDataTable
+              items={users.data}
+              fields={fields}
+              hover
+              striped
+              bordered
+              size="lg"
+              itemsPerPage={1}
+              scopedSlots = {{
+                'action':
+                  (item)=>(
+                    <td>
+                      Edit | Delete
+                    </td>
+                  )
+              }}
+            />
+            <CPagination
+              activePage={page}
+              onActivePageChange={pageChange}
+              pages={5}
+              doubleArrows={false} 
+              align="center"
+            />
           </CCardBody>
         </CCard>
       </CCol>

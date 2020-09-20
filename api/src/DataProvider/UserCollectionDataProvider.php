@@ -8,10 +8,13 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\DataProvider\AbstractRoleCollectionCheckpoint;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
 
-class UserCollectionDataProvider extends AbstractRoleCollectionCheckpoint
+class UserCollectionDataProvider
 {
     private $repository;
+    private $collectionExtensions;
 
     public function __construct(
         UserRepository $repository,
@@ -19,16 +22,10 @@ class UserCollectionDataProvider extends AbstractRoleCollectionCheckpoint
         iterable $collectionExtensions
     ) {
         $this->repository = $repository;
-        parent::__construct($managerRegistry, $collectionExtensions);
+        $this->managerRegistry = $managerRegistry;
+        $this->collectionExtensions = $collectionExtensions;
     }
 
-    /**
-     * @param string $resourceClass
-     * @param string|null $operationName
-     * @param array $context
-     *
-     * @return bool
-     */
     public function supports(
         string $resourceClass,
         string $operationName = null,
@@ -41,11 +38,24 @@ class UserCollectionDataProvider extends AbstractRoleCollectionCheckpoint
         string $resourceClass,
         string $operationName = null,
         array $context = []
-    ) {
+    ): PaginatorInterface {
         if (!$this->supports($resourceClass, $operationName, $context)) {
-          return;
+          return PaginatorInterface;
         }
 
-        return parent::getCollection($resourceClass, $operationName, $context);
+        $manager = $this->managerRegistry->getManagerForClass($resourceClass);
+        $repository = $manager->getRepository($resourceClass);
+        $queryBuilder = $repository->createQueryBuilder('e');
+        $queryNameGenerator = new QueryNameGenerator();
+
+        foreach ($this->collectionExtensions as $extension) {
+            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+
+            if ($extension instanceof QueryResultCollectionExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
+                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
+            }
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

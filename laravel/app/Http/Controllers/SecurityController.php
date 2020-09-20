@@ -40,8 +40,14 @@ class SecurityController extends Controller
 
     public function me(Request $request)
     {
-        dd($request->user());
-        return $request->user();
+        return response()->json($request->user());
+    }
+
+    public function logout(Request $request)
+    {
+        return response()->json([
+            'logout' => $request->user()->currentAccessToken()->delete()
+        ]);
     }
 
 

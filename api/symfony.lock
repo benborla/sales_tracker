@@ -95,11 +95,11 @@
     "doctrine/reflection": {
         "version": "1.2.1"
     },
+    "doctrine/sql-formatter": {
+        "version": "1.1.1"
+    },
     "fig/link-util": {
         "version": "1.1.0"
-    },
-    "jdorn/sql-formatter": {
-        "version": "v1.2.17"
     },
     "jms/metadata": {
         "version": "2.3.0"
@@ -343,6 +343,9 @@
     "symfony/options-resolver": {
         "version": "v5.0.10"
     },
+    "symfony/orm-pack": {
+        "version": "v1.0.8"
+    },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.17.1"
     },
@@ -360,6 +363,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.15.0"
+    },
+    "symfony/polyfill-php80": {
+        "version": "v1.18.1"
     },
     "symfony/process": {
         "version": "v5.0.10"
@@ -410,6 +416,9 @@
     },
     "symfony/serializer": {
         "version": "v5.0.7"
+    },
+    "symfony/serializer-pack": {
+        "version": "v1.0.3"
     },
     "symfony/service-contracts": {
         "version": "v2.0.1"

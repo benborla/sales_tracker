@@ -9,13 +9,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class UserResource extends JsonResource
 {
     /**
-     * @return array
+     * @return array|User
      */
-    public function toArray($request): array
+    public function toArray($request)
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'email' => $this->email,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updatedAt
         ];
     }
 }

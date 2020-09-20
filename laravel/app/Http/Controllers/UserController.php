@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
 use App\Repository\UserRepositoryInterface;
@@ -23,7 +24,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = $this->userRepository->all();
+        $users = $this->userRepository->paginated();
+
         return UserResource::collection($users);
 
     }
@@ -36,7 +38,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = $this->userRepository->create($request->all());
+
+        return new UserResource($user);
     }
 
     /**
@@ -60,7 +64,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = $this->userRepository->update($id, $request->all());
+
+        return new UserResource($user);
     }
 
     /**
@@ -71,6 +77,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return new JsonResponse(['deleted' => $this->userRepository->delete($id)]);
     }
 }

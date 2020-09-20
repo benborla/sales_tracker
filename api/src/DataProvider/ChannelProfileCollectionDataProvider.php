@@ -8,6 +8,7 @@ use App\Entity\ChannelProfile;
 use App\Repository\ChannelProfileRepository;
 use App\DataProvider\AbstractRoleCollectionCheckpoint;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
 
 class ChannelProfileCollectionDataProvider extends AbstractRoleCollectionCheckpoint
 {
@@ -41,9 +42,9 @@ class ChannelProfileCollectionDataProvider extends AbstractRoleCollectionCheckpo
         string $resourceClass,
         string $operationName = null,
         array $context = []
-    ) {
+    ): PaginatorInterface {
         if (!$this->supports($resourceClass, $operationName, $context)) {
-          return;
+          return PaginatorInterface;
         }
 
         return parent::getCollection($resourceClass, $operationName, $context);

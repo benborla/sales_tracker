@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-
    /**
     * UserRepository constructor.
     *
@@ -21,11 +20,18 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
        parent::__construct($model);
    }
 
-   /**
-    * @return \Illuminate\Support\Collection
-    */
    public function all()
    {
+       return $this->model->all();
+   }
+
+   public function paginated()
+   {
        return $this->model->paginate();
+   }
+
+   public function getOneBy($key, $value)
+   {
+       return $this->model->query()->where($key, $value)->first();
    }
 }

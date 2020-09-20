@@ -21,10 +21,14 @@ Route::group([
 ], function ($router) {
     Route::post('/logout', [\App\Http\Controllers\SecurityController::class, 'logout']);
     Route::get('/me', [\App\Http\Controllers\SecurityController::class, 'me']);
+    Route::get('/logout', [\App\Http\Controllers\SecurityController::class, 'logout']);
 
     /** USERS **/
-    Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
-    Route::get('/users/{id?}', [App\Http\Controllers\UserController::class, 'show']);
+    Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
+    Route::get('/users/{id?}', [\App\Http\Controllers\UserController::class, 'show']);
+    Route::post('/users', [\App\Http\Controllers\UserController::class, 'store']);
+    Route::patch('/users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
+    Route::delete('/users/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
 
     /** END USERS **/
 
