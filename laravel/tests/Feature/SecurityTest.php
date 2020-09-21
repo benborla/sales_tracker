@@ -6,19 +6,21 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Http\Repository\Eloquent\UserRepository;
+use Laravel\Sanctum\Sanctum;
+use App\Models\User;
+
 
 class SecurityTest extends TestCase
 {
 
     /**
-     * A basic feature test example.
-     *
-     * @return void
+     * @test
      */
-    public function testLogin()
+    public function test_login()
     {
+        $user = $this->createUser();
         $response = $this->json('POST', '/api/login', [
-            'email' => self::TEST_EMAIL,
+            'email' => $user->email,
             'password' => self::TEST_PASSWORD
         ]);
 
@@ -26,18 +28,20 @@ class SecurityTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
-                    'email' => self::TEST_EMAIL
+                    'email' => $user->email
                 ]
             ])
             ->assertJsonStructure([
                 'token',
                 'data'
             ]);
+
+        $user->tokens()->delete();
     }
 
-    public function testLogout()
+    public function test_logout()
     {
-        $response = $this->auth()->get('/api/logout');
+        $response = $this->api()->getJson('/api/logout');
 
         $response
             ->assertStatus(200)
@@ -48,12 +52,13 @@ class SecurityTest extends TestCase
 
     public function testShouldMatchTheAuthenticatedInfo()
     {
-        $response = $this->auth()->get('/api/me');
+        $user = $this->createUser();
+        $response = $this->api($user)->get('/api/me');
 
         $response
             ->assertStatus(200)
             ->assertJson([
-                'email' => self::TEST_EMAIL
+                'email' => $user->email
             ]);
     }
 }

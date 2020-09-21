@@ -11,8 +11,7 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    protected const TEST_EMAIL = 'admin@test.com';
-    protected const TEST_PASSWORD = 'admin123';
+    protected const TEST_PASSWORD = 'secret';
 
     protected $userRepository;
 
@@ -23,18 +22,14 @@ abstract class TestCase extends BaseTestCase
 
     protected function createUser()
     {
-        return User::factory()->make();
+        return User::factory()->create(['password' => bcrypt(self::TEST_PASSWORD)]);
     }
 
-    protected function auth()
+    protected function api(?User $user = null)
     {
-        $response = $this->json('POST', '/api/login', [
-            'email' => self::TEST_EMAIL,
-            'password' => self::TEST_PASSWORD
-        ]);
+        $user = $user ?? $this->createUser();
+        $token = $user->createToken($user->email)->plainTextToken;
 
-        return $this->withHeaders([
-            'Authorization' => "Bearer $response[token]"
-        ]);
+        return $this->withHeaders(['Authorization' => "Bearer $token"]);
     }
 }

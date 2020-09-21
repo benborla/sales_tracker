@@ -14,14 +14,10 @@ class UserControllerTest extends TestCase
     {
         return new UserRepository(new User());
     }
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
+
     public function test_get_users_collection()
     {
-        $response = $this->auth()->get('/api/users');
+        $response = $this->api()->get('/api/users');
 
         $response
             ->assertStatus(200)
@@ -34,8 +30,8 @@ class UserControllerTest extends TestCase
 
     public function test_get_user()
     {
-        $user = $this->getUserRepository()->getOneBy('email', self::TEST_EMAIL);
-        $response = $this->auth()->get("/api/users/$user->id");
+        $user = $this->createUser();
+        $response = $this->api()->getJson("/api/users/$user->id");
 
         $response->assertStatus(200);
         $this->assertTrue($user->email === $response['data']['email']);
@@ -44,22 +40,23 @@ class UserControllerTest extends TestCase
 
     public function test_create_user()
     {
-
-        $request = $this->userRequest();
-        $response = $this->auth()->postJson('/api/users', $request);
+        $email = \uniqid() . '@example.com';
+        $response = $this->api()->postJson('/api/users', [
+            'email' => $email,
+            'name' => 'Feature Test',
+            'password' => self::TEST_PASSWORD
+        ]);
 
         $response->assertStatus(201);
-        $this->assertTrue($request['email'] === $response['data']['email']);
+        $this->assertTrue($email == $response['data']['email']);
     }
 
     public function test_update_user()
     {
         $newName = 'Ben Franklin';
+        $user = $this->createUser();
 
-        $createdUser = $this->auth()->postJson('/api/users', $this->userRequest());
-        $id = $createdUser['data']['id'];
-
-        $response = $this->auth()->patchJson("/api/users/$id", ['name' => $newName]);
+        $response = $this->api()->patchJson("/api/users/$user->id", ['name' => $newName]);
 
         $response->assertStatus(200);
         $this->assertTrue($newName === $response['data']['name']);
@@ -67,21 +64,10 @@ class UserControllerTest extends TestCase
 
     public function test_delete_user()
     {
-        $createdUser = $this->auth()->postJson('/api/users', $this->userRequest());
-        $id = $createdUser['data']['id'];
+        $user = $this->createUser();
 
-        $response = $this->auth()->deleteJson("/api/users/$id");
+        $response = $this->api()->deleteJson("/api/users/$user->id");
         $response->assertStatus(200);
         $this->assertTrue(true === $response['deleted']);
-    }
-
-    private function userRequest()
-    {
-        $user = $this->createUser();
-        return [
-            'email' => $user->email,
-            'name' => $user->name,
-            'password' => 'test123'
-        ];
     }
 }

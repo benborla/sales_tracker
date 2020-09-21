@@ -25,11 +25,10 @@ Route::group([
 
     /** USERS **/
     Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
-    Route::get('/users/{id?}', [\App\Http\Controllers\UserController::class, 'show']);
     Route::post('/users', [\App\Http\Controllers\UserController::class, 'store']);
+    Route::get('/users/{id?}', [\App\Http\Controllers\UserController::class, 'show']);
     Route::patch('/users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
     Route::delete('/users/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
-
     /** END USERS **/
 
     // create a subdomain route here
