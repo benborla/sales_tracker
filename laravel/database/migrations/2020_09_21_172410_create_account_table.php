@@ -13,7 +13,7 @@ class CreateAccountTable extends Migration
      */
     public function up()
     {
-        Schema::create('account', function (Blueprint $table) {
+        Schema::create('account_type', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
                   ->constrained('users')
@@ -29,6 +29,6 @@ class CreateAccountTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('account');
+        Schema::dropIfExists('account_type');
     }
 }

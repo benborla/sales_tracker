@@ -45,5 +45,9 @@ Route::group([
 
     /** END ADDRESS **/
 
+    /** ACCOUNT TYPE **/
+    Route::get('/users/{user}/account_type', [\App\Http\Controllers\User\AccountTypeController::class, 'index']);
+
+    /** END ACCOUNT TYPE **/
     // create a subdomain route here
 });
