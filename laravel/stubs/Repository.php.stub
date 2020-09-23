@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository\Eloquent{{namespace}};
 
-use App\Models{{namespace}}{{resourceName}}
-use App\Repository{{namespace}}{{resourceName}}RepositoryInterface;
+use App\Models{{namespace}}{{resourceName}};
+use App\Repository\Interfaces\{{namespace}}{{resourceName}}RepositoryInterface;
 use Illuminate\Support\Collection;
 
 class {{resource}}Repository extends BaseRepository implements {{resource}}RepositoryInterface

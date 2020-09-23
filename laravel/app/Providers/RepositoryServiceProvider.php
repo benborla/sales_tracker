@@ -3,13 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Repository\EloquentRepositoryInterface;
-use App\Repository\UserRepositoryInterface;
-use App\Repository\User\AddressRepositoryInterface;
-use App\Repository\Eloquent\UserRepository;
-use App\Repository\Eloquent\User\AddressRepository;
-use App\Repository\Eloquent\BaseRepository;
-// @import
 
 /**
  * IMPORTANT!
@@ -31,9 +24,9 @@ class RepositoryServiceProvider extends ServiceProvider
     */
     public function register()
     {
-        $this->app->bind(EloquentRepositoryInterface::class, BaseRepository::class);
-        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(AddressRepositoryInterface::class, AddressRepository::class);
+        $this->app->bind(\App\Repository\Interfaces\EloquentRepositoryInterface::class, \App\Repository\Eloquent\BaseRepository::class);
+        $this->app->bind(\App\Repository\Interfaces\UserRepositoryInterface::class, \App\Repository\Eloquent\UserRepository::class);
+        $this->app->bind(\App\Repository\Interfaces\User\AddressRepositoryInterface::class, \App\Repository\Eloquent\User\AddressRepository::class);
         // @register
     }
 }

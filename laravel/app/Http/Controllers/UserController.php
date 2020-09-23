@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\UserResource;
-use App\Repository\UserRepositoryInterface;
+use App\Repository\Interfaces\UserRepositoryInterface;
 
 class UserController extends Controller
 {

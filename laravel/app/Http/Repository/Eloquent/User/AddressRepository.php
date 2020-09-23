@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository\Eloquent\User;
 
 use App\Models\User\Address;
-use App\Repository\User\AddressRepositoryInterface;
+use App\Repository\Interfaces\User\AddressRepositoryInterface;
 use Illuminate\Support\Collection;
 use App\Repository\Eloquent\BaseRepository;
 

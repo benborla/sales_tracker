@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository{{namespace}};
+namespace App\Repository\Interfaces{{namespace}};
 
 use Illuminate\Support\Collection;
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository\Hello;
+namespace App\Repository\Interfaces;
 
 use Illuminate\Support\Collection;
 
-interface TestRepositoryInterface
+interface UserRepositoryInterface
 {
    public function all();
 

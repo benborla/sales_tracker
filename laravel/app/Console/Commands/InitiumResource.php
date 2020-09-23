@@ -84,8 +84,8 @@ class InitiumResource extends Command
     private function generateRepository(string $namespace, string $resourceName)
     {
         $dirName = $namespace ? $namespace . '/' : '';
-        $repositoryInterfacePath = \base_path() . '/app/Http/Repository/' . $dirName;
-        $repositoryEloquentPath = \base_path() . '/app/Http/Repository/Eloquent/' . $namespace;
+        $repositoryInterfacePath = \base_path() . '/app/Http/Repository/Interface' . $dirName;
+        $repositoryEloquentPath = \base_path() . '/app/Http/Repository/Eloquent/' . $dirName;
         $namespace =  $namespace ? '\\' . $namespace : '';
         $stubsPath = \base_path() . '/stubs';
         $repositoryStub = $stubsPath . '/Repository.php.stub';
@@ -126,6 +126,7 @@ class InitiumResource extends Command
         ], $repositoryInterface);
 
         $this->createFile($repositoryInterfacePath, $resource . 'RepositoryInterface.php', $repositoryInterface);
+        $this->createFile($repositoryEloquentPath, $resource . 'Repository.php', $repository);
     }
 
     private function createFile($path, $fileName, $content)
