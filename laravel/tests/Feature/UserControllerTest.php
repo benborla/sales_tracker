@@ -5,16 +5,10 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\User;
 use App\Repository\Eloquent\UserRepository;
 
 class UserControllerTest extends TestCase
 {
-    private function getUserRepository()
-    {
-        return new UserRepository(new User());
-    }
-
     public function test_get_users_collection()
     {
         $response = $this->api()->get('/api/users');

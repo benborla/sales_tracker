@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use App\Http\Resources\UserResource;
-use App\Repository\UserRepositoryInterface;
+use App\Models\User\User;
+use App\Http\Resources\User\AddressResource;
+use App\Repository\User\AddressRepositoryInterface;
 
-class UserController extends Controller
+class AddressController extends Controller
 {
-    private $userRepository;
+    private $addressRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(AddressRepositoryInterface $addressRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->addressRepository = $addressRepository;
     }
 
     /**
@@ -21,12 +22,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, User $user)
     {
-        $users = $this->userRepository->paginated();
-
-        return UserResource::collection($users);
-
+        $address = $this->addressRepository->getAllFromUser($user->id);
+        return AddressResource::collection($address);
     }
 
     /**
@@ -37,9 +36,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = $this->userRepository->create($request->all());
-
-        return new UserResource($user);
+        //
     }
 
     /**
@@ -50,8 +47,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = $this->userRepository->find($id);
-        return new UserResource($user);
+        //
     }
 
     /**
@@ -63,9 +59,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = $this->userRepository->update($id, $request->all());
-
-        return new UserResource($user);
+        //
     }
 
     /**
@@ -76,6 +70,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        return new JsonResponse(['deleted' => $this->userRepository->delete($id)]);
+        //
     }
 }

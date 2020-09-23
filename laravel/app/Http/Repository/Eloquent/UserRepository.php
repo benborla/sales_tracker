@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository\Eloquent;
 
-use App\Models\User;
+use App\Models\User\User;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 

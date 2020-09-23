@@ -7,15 +7,9 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Http\Repository\Eloquent\UserRepository;
 use Laravel\Sanctum\Sanctum;
-use App\Models\User;
-
 
 class SecurityTest extends TestCase
 {
-
-    /**
-     * @test
-     */
     public function test_login()
     {
         $user = $this->createUser();

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use App\Models\User\User;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -17,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/';
+    public const HOME = '/api';
 
     /**
      * If specified, this namespace is automatically applied to your controller routes.
@@ -44,6 +45,15 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('api')
                 ->middleware('api')
                 ->group(base_path('routes/api.php'));
+        });
+
+        $this->getBindRoutes();
+    }
+
+    protected function getBindRoutes()
+    {
+        Route::bind('user', function ($id) {
+            return User::query()->findOrFail($id);
         });
     }
 

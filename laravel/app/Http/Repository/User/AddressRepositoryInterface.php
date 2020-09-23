@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\User;
 
 use Illuminate\Support\Collection;
 
-interface UserRepositoryInterface
+interface AddressRepositoryInterface
 {
    public function all();
 

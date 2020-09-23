@@ -3,8 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use App\Models\User;
-use Laravel\Sanctum\Sanctum;
+use App\Models\User\User;
 use App\Repository\UserRepositoryInterface;
 
 abstract class TestCase extends BaseTestCase

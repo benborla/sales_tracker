@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
             'password'       => bcrypt('admin123'),
             'remember_token' => Str::random(60)
         ]);
+
         User::factory()
             ->times(50)
             ->create();

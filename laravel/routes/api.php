@@ -13,8 +13,17 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware('api')
-    ->post('/login', [\App\Http\Controllers\SecurityController::class, 'login']);
+Route::group([
+    'middleware' => 'api'
+], function ($router) {
+    Route::any('/', function () {
+        return [
+            'app' => config('app.name')
+        ];
+    });
+
+    Route::post('/login', [\App\Http\Controllers\SecurityController::class, 'login']);
+});
 
 Route::group([
     'middleware' => 'auth:sanctum',
@@ -30,6 +39,11 @@ Route::group([
     Route::patch('/users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
     Route::delete('/users/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
     /** END USERS **/
+
+    /** ADDRESS **/
+    Route::get('/users/{user}/address', [\App\Http\Controllers\User\AddressController::class, 'index']);
+
+    /** END ADDRESS **/
 
     // create a subdomain route here
 });
