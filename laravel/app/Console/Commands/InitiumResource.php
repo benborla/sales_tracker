@@ -47,44 +47,51 @@ class InitiumResource extends Command
         $namespace = \ucfirst($this->option('namespace'));
 
         echo 'Creating controller and model file' . \PHP_EOL;
-        // $this->call('make:controller', [
-            // 'name' => "$namespace/{$resourceName}Controller",
-            // '--api' => true,
-            // '--model' => "$namespace/$resourceName"
-        // ]);
+        $this->call('make:controller', [
+            'name' => "$namespace/{$resourceName}Controller",
+            '--api' => true,
+            '--model' => "$namespace/$resourceName"
+        ]);
 
         echo 'Creating resource file' . \PHP_EOL;
-        // $this->call('make:resource', [
-            // 'name' => "$namespace/{$resourceName}Resource"
-        // ]);
+        $this->call('make:resource', [
+            'name' => "$namespace/{$resourceName}Resource"
+        ]);
 
         echo 'Creating test file' . \PHP_EOL;
-        // $this->call('make:test', [
-            // 'name' => "$namespace/{$resourceName}ControllerTest"
-        // ]);
-        //
+        $this->call('make:test', [
+            'name' => "$namespace/{$resourceName}ControllerTest"
+        ]);
+
         echo 'Generating repository' . \PHP_EOL;
         $this->generateRepository($namespace, $resourceName);
 
-        // Update RepositoryServiceProvider
+        echo 'Updating Repository Service Provider' . \PHP_EOL;
         $this->updateRepositoryProvider($namespace, $resourceName);
 
+        echo 'Done!' . \PHP_EOL;
         return 0;
     }
 
     private function updateRepositoryProvider(string $namespace, string $resource)
     {
-        $namespace = $namespace . "\\";
-        $repositoryInterfaceClass = "App\\Repository" . $namespace . $resource . 'RepositoryInterface';
-        $repositoryClass = "App\\Repository\\Eloquent" . $namespace . $resource . 'Repository';
+        $resource = $namespace ? '\\' . $namespace . '\\' : '\\' . $resource;
+        $repositoryInterfaceClass = "App\\Repository\\Interfaces" . $resource . 'RepositoryInterface';
+        $repositoryClass = "App\\Repository\\Eloquent" . $resource . 'Repository';
+        $repositoryServiceProvider = \base_path() . '/app/Providers/RepositoryServiceProvider.php';
+        $tab = "\t\t";
 
-        $register = \sprintf('$this->app->bind(\%s, \%s);', $repositoryInterfaceClass, $repositoryClass);
+        $register = \sprintf('$this->app->bind(\%s::class, \%s::class);', $repositoryInterfaceClass, $repositoryClass);
+        $content = file_get_contents($repositoryServiceProvider);
+        $content = str_replace('// @register', $register . \PHP_EOL . $tab. '// @register', $content);
+
+        \file_put_contents($repositoryServiceProvider, $content);
     }
 
     private function generateRepository(string $namespace, string $resourceName)
     {
         $dirName = $namespace ? $namespace . '/' : '';
-        $repositoryInterfacePath = \base_path() . '/app/Http/Repository/Interface' . $dirName;
+        $repositoryInterfacePath = \base_path() . '/app/Http/Repository/Interfaces/' . $dirName;
         $repositoryEloquentPath = \base_path() . '/app/Http/Repository/Eloquent/' . $dirName;
         $namespace =  $namespace ? '\\' . $namespace : '';
         $stubsPath = \base_path() . '/stubs';
