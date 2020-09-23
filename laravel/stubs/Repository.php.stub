@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Repository\Eloquent{{namespace}};
+
+use App\Models{{namespace}}{{resourceName}}
+use App\Repository{{namespace}}{{resourceName}}RepositoryInterface;
+use Illuminate\Support\Collection;
+
+class {{resource}}Repository extends BaseRepository implements {{resource}}RepositoryInterface
+{
+   /**
+    * UserRepository constructor.
+    *
+    * @param \App\Model{{namespace}}{{resourceName}} $model
+    */
+   public function __construct({{resource}} $model)
+   {
+       parent::__construct($model);
+   }
+
+   public function all()
+   {
+       return $this->model->all();
+   }
+
+   public function paginated()
+   {
+       return $this->model->paginate();
+   }
+
+   public function getOneBy($key, $value)
+   {
+       return $this->model->query()->where($key, $value)->first();
+   }
+}

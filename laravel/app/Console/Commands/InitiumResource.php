@@ -46,13 +46,95 @@ class InitiumResource extends Command
         $resourceName = \ucfirst($this->argument('resourceName'));
         $namespace = \ucfirst($this->option('namespace'));
 
-        echo 'Creating your controller' . \PHP_EOL;
-        $this->call("make:controller $namespace/{$resourceName}Controller --api");
+        echo 'Creating controller and model file' . \PHP_EOL;
+        // $this->call('make:controller', [
+            // 'name' => "$namespace/{$resourceName}Controller",
+            // '--api' => true,
+            // '--model' => "$namespace/$resourceName"
+        // ]);
 
+        echo 'Creating resource file' . \PHP_EOL;
+        // $this->call('make:resource', [
+            // 'name' => "$namespace/{$resourceName}Resource"
+        // ]);
 
-        echo "$resourceName on $namespace";
+        echo 'Creating test file' . \PHP_EOL;
+        // $this->call('make:test', [
+            // 'name' => "$namespace/{$resourceName}ControllerTest"
+        // ]);
+        //
+        echo 'Generating repository' . \PHP_EOL;
+        $this->generateRepository($namespace, $resourceName);
 
+        // Update RepositoryServiceProvider
+        $this->updateRepositoryProvider($namespace, $resourceName);
 
         return 0;
+    }
+
+    private function updateRepositoryProvider(string $namespace, string $resource)
+    {
+        $namespace = $namespace . "\\";
+        $repositoryInterfaceClass = "App\\Repository" . $namespace . $resource . 'RepositoryInterface';
+        $repositoryClass = "App\\Repository\\Eloquent" . $namespace . $resource . 'Repository';
+
+        $register = \sprintf('$this->app->bind(\%s, \%s);', $repositoryInterfaceClass, $repositoryClass);
+    }
+
+    private function generateRepository(string $namespace, string $resourceName)
+    {
+        $dirName = $namespace ? $namespace . '/' : '';
+        $repositoryInterfacePath = \base_path() . '/app/Http/Repository/' . $dirName;
+        $repositoryEloquentPath = \base_path() . '/app/Http/Repository/Eloquent/' . $namespace;
+        $namespace =  $namespace ? '\\' . $namespace : '';
+        $stubsPath = \base_path() . '/stubs';
+        $repositoryStub = $stubsPath . '/Repository.php.stub';
+        $repositoryInterfaceStub = $stubsPath . '/RepositoryInterface.php.stub';
+        $repositoryServiceProvider = \base_path() . '/app/Providers/RepositoryServiceProvider.php';
+
+        if (!\file_exists($stubsPath) &&
+            !\file_exists($repositoryStub) &&
+            !\file_exists($repositoryInterfaceStub)
+        ) {
+            return 0;
+        }
+
+        $resource = $resourceName;
+        $resourceName = '\\' . $resourceName;
+
+        $repository = \file_get_contents($repositoryStub);
+        $repositoryInterface = \file_get_contents($repositoryInterfaceStub);
+
+        $repository = str_replace([
+            '{{namespace}}',
+            '{{resourceName}}',
+            '{{resource}}'
+        ], [
+            $namespace,
+            $resourceName,
+            $resource
+        ], $repository);
+
+        $repositoryInterface = str_replace([
+            '{{namespace}}',
+            '{{resourceName}}',
+            '{{resource}}'
+        ], [
+            $namespace,
+            $resourceName,
+            $resource
+        ], $repositoryInterface);
+
+        $this->createFile($repositoryInterfacePath, $resource . 'RepositoryInterface.php', $repositoryInterface);
+    }
+
+    private function createFile($path, $fileName, $content)
+    {
+        if (!\file_exists($path)) {
+            mkdir($path, 0777, true);
+            $this->createFile($path, $fileName, $content);
+        }
+
+        file_put_contents($path . $fileName, $content);
     }
 }
