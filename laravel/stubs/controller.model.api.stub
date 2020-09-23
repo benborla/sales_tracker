@@ -11,7 +11,7 @@ class {{ class }} extends Controller
 {
     private ${{ modelVariable }}Repository;
 
-    public function __construct({{ modelVariable }}RepositoryInterface ${{ modelVariable }}Repository)
+    public function __construct({{ model }}RepositoryInterface ${{ modelVariable }}Repository)
     {
         $this->{{ modelVariable }}Repository = ${{ modelVariable }}Repository;
     }
@@ -24,7 +24,7 @@ class {{ class }} extends Controller
      */
     public function index(Request $request)
     {
-        ${{ modelVariable }} = $this->{{ modelVariable }}->paginated();
+        ${{ modelVariable }} = $this->{{ modelVariable }}Repository->paginated();
         return {{ model }}Resource::collection(${{ modelVariable }});
     }
 
