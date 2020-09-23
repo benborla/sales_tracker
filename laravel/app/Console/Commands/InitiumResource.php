@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Composer;
 
 class InitiumResource extends Command
 {
@@ -28,21 +27,12 @@ class InitiumResource extends Command
     protected $description = 'This will create a resource for Initium';
 
     /**
-     * The Composer instance.
-     *
-     * @var \Illuminate\Foundation\Composer
-     */
-    protected $composer;
-
-    /**
      * Create a new command instance.
      *
-     * @param Composer $composer
      * @return void
      */
-    public function __construct(Composer $composer)
+    public function __construct()
     {
-        $this->composer = $composer;
         parent::__construct();
     }
 
@@ -57,6 +47,10 @@ class InitiumResource extends Command
         $namespace = \ucfirst($this->option('namespace'));
 
         echo 'Creating controller and model file' . \PHP_EOL;
+        $this->call('make:model', [
+            'name' => "$namespace/$resourceName"
+        ]);
+
         $this->call('make:controller', [
             'name' => "$namespace/{$resourceName}Controller",
             '--api' => true,
@@ -145,8 +139,7 @@ class InitiumResource extends Command
         $this->createFile($repositoryInterfacePath, $resource . 'RepositoryInterface.php', $repositoryInterface);
         $this->createFile($repositoryEloquentPath, $resource . 'Repository.php', $repository);
 
-        $this->composer->dumpAutoloads();
-        $this->composer->dumpOptimized();
+        \shell_exec('composer dump-autoload');
     }
 
     private function createFile($path, $fileName, $content)
