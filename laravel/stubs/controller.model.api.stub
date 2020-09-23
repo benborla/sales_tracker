@@ -6,6 +6,7 @@ use {{ namespacedModel }};
 use {{ rootNamespace }}Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\{{ model }}Resource;
+use App\Repository\Interfaces\User\{{ model }}RepositoryInterface;
 
 class {{ class }} extends Controller
 {
