@@ -75,7 +75,7 @@ class InitiumResource extends Command
 
     private function updateRepositoryProvider(string $namespace, string $resource)
     {
-        $resource = $namespace ? '\\' . $namespace . '\\' : '\\' . $resource;
+        $resource = $namespace ? '\\' . $namespace . '\\' . $resource : '\\' . $resource;
         $repositoryInterfaceClass = "App\\Repository\\Interfaces" . $resource . 'RepositoryInterface';
         $repositoryClass = "App\\Repository\\Eloquent" . $resource . 'Repository';
         $repositoryServiceProvider = \base_path() . '/app/Providers/RepositoryServiceProvider.php';
