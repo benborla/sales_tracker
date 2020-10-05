@@ -34,9 +34,10 @@ class AddressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
-        //
+        $address = $this->addressRepository->add($user, $request->all());
+        return new AddressResource($address);
     }
 
     /**

@@ -23,6 +23,7 @@ class Address extends Model
     public const TYPE_SHIPPING = 'SHIPPING';
 
     public $table = 'address';
+    public $timestamps = false;
 
     protected $fillable = [
         'user_id',

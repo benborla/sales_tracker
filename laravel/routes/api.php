@@ -42,6 +42,8 @@ Route::group([
 
     /** ADDRESS **/
     Route::get('/users/{user}/address', [\App\Http\Controllers\User\AddressController::class, 'index']);
+    Route::post('/users/{user}/address', [\App\Http\Controllers\User\AddressController::class, 'store']);
+    Route::patch('/users/{user}/address/{id}', [\App\Http\Controllers\User\AddressController::class, 'index']);
 
     /** END ADDRESS **/
 

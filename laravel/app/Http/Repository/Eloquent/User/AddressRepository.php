@@ -8,6 +8,7 @@ use App\Models\User\Address;
 use App\Repository\Interfaces\User\AddressRepositoryInterface;
 use Illuminate\Support\Collection;
 use App\Repository\Eloquent\BaseRepository;
+use App\Models\User\User;
 
 class AddressRepository extends BaseRepository implements AddressRepositoryInterface
 {
@@ -34,5 +35,16 @@ class AddressRepository extends BaseRepository implements AddressRepositoryInter
    public function getAllFromUser($userId)
    {
        return $this->model->query()->where('user_id', $userId)->get();
+   }
+
+   public function add(User $user, array $attributes)
+   {
+       $attributes['user_id'] = $user->id;
+       return parent::create($attributes);
+   }
+
+   public function delete(int $id): bool
+   {
+       return $this->find($id)->delete();
    }
 }

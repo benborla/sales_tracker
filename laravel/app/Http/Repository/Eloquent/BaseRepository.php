@@ -29,7 +29,7 @@ class BaseRepository implements EloquentRepositoryInterface
     *
     * @return \Illuminate\Database\Eloquent\Model
     */
-    public function create(array $attributes): Model
+    public function create(array $attributes)
     {
         return $this->model->create($attributes);
     }
