@@ -43,7 +43,11 @@ Route::group([
     /** ADDRESS **/
     Route::get('/users/{user}/address', [\App\Http\Controllers\User\AddressController::class, 'index']);
     Route::post('/users/{user}/address', [\App\Http\Controllers\User\AddressController::class, 'store']);
-    Route::patch('/users/{user}/address/{id}', [\App\Http\Controllers\User\AddressController::class, 'index']);
+    Route::get('/users/{user}/address/{id}', [\App\Http\Controllers\User\AddressController::class, 'show']);
+    Route::get('/users/{user}/shipping', [\App\Http\Controllers\User\AddressController::class, 'showShipping']);
+    Route::get('/users/{user}/billing', [\App\Http\Controllers\User\AddressController::class, 'showBilling']);
+    Route::patch('/users/{user}/address/{id}', [\App\Http\Controllers\User\AddressController::class, 'update']);
+    Route::delete('/users/{user}/address/{id}', [\App\Http\Controllers\User\AddressController::class, 'destroy']);
 
     /** END ADDRESS **/
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User\User;
+use App\Models\User\Address;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\User\AddressResource;
 use App\Repository\Interfaces\User\AddressRepositoryInterface;
 
@@ -46,9 +48,25 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user, int $id)
     {
-        //
+        $address = $this->addressRepository->find($id);
+
+        return new AddressResource($address);
+    }
+
+    public function showShipping(User $user)
+    {
+        $address = $this->addressRepository->getOneByAddresType($user->id, Address::TYPE_SHIPPING);
+
+        return new AddressResource($address);
+    }
+
+    public function showBilling(User $user)
+    {
+        $address = $this->addressRepository->getOneByAddresType($user->id, Address::TYPE_BILLING);
+
+        return new AddressResource($address);
     }
 
     /**
@@ -58,9 +76,11 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user, int $id)
     {
-        //
+        $address = $this->addressRepository->update($id, $request->all());
+
+        return new AddressResource($address);
     }
 
     /**
@@ -69,8 +89,8 @@ class AddressController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user, int $id)
     {
-        //
+        return new JsonResponse(['deleted' => $this->addressRepository->delete($id)]);
     }
 }

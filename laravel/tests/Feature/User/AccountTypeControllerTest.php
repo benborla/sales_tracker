@@ -9,8 +9,6 @@ use Tests\TestCase;
 class AccountTypeControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
-     *
      * @return void
      */
     public function test_get_users_account_type()

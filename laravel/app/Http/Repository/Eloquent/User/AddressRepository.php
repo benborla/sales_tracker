@@ -31,6 +31,14 @@ class AddressRepository extends BaseRepository implements AddressRepositoryInter
    {
        return $this->model->query()->where($key, $value)->first();
    }
+   
+   public function getOneByAddresType(int $userId, string $type)
+   {
+        return $this->model->query()
+            ->where('user_id', $userId)
+            ->where('type', $type)
+            ->first();
+   }
 
    public function getAllFromUser($userId)
    {
